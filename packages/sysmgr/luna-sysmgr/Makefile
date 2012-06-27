@@ -43,11 +43,19 @@ package:: ipkgs/${APP_ID}_${VERSION}_armv7.ipk
 build:: build/armv7-stage/.built-${VERSION}
 unpack: build/src/.unpacked
 
+LUNASYSMGR_NAME := LunaSysMgr
+LUNASYSMGR_TAG := initial
+LUNASYSMGR_URL := https://github.com/woce/$(LUNASYSMGR_NAME)/tarball/$(LUNASYSMGR_TAG)
+LUNASYSMGR_DL := $(DL_DIR)/$(LUNASYSMGR_NAME)-$(LUNASYSMGR_TAG).tar.gz
+
+# Create rule for grabbing this version
+$(eval $(call DLTGZ,$(LUNASYSMGR_NAME),$(LUNASYSMGR_TAG),$(LUNASYSMGR_URL)))
+
 ### Unpack the software and build it
-build/src/.unpacked: $(WOCE_DL) sysmgr.patch
+build/src/.unpacked: sysmgr.patch $(LUNASYSMGR_DL)
 	-rm -rf build
 	mkdir -p build/src
-	tar -C build/src --strip=2 -zxf $(WOCE_DL) webos-WOCE/luna-sysmgr
+	tar -C build/src --strip=1 -zxf $(LUNASYSMGR_DL)
 	patch -Np2 -d build/src < sysmgr.patch
 	touch $@
 
