@@ -45,17 +45,17 @@ unpack: build/src/.unpacked
 
 LUNASYSMGR_NAME := LunaSysMgr
 LUNASYSMGR_TAG := initial
-LUNASYSMGR_URL := https://github.com/woce/LunaSysMgr.git
+LUNASYSMGR_URL := https://github.com/woce/$(LUNASYSMGR_NAME)/tarball/$(LUNASYSMGR_TAG)
 LUNASYSMGR_DL := $(DL_DIR)/$(LUNASYSMGR_NAME)-$(LUNASYSMGR_TAG).tar.gz
 
 # Create rule for grabbing this version
-$(eval $(call DLGIT,$(LUNASYSMGR_NAME),$(LUNASYSMGR_TAG),$(LUNASYSMGR_URL)))
+$(eval $(call DLTGZ,$(LUNASYSMGR_NAME),$(LUNASYSMGR_TAG),$(LUNASYSMGR_URL)))
 
 ### Unpack the software and build it
 build/src/.unpacked: sysmgr.patch $(LUNASYSMGR_DL)
 	-rm -rf build
 	mkdir -p build/src
-	tar -C build/src -zxf $(LUNASYSMGR_DL)
+	tar -C build/src --strip=1 -zxf $(LUNASYSMGR_DL)
 	patch -Np2 -d build/src < sysmgr.patch
 	touch $@
 
