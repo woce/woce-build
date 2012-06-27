@@ -33,8 +33,5 @@ include $(LEVEL)/support/rootfs.mk
 # Include rules for downloading and extracting toolchains
 include $(LEVEL)/support/toolchains.mk
 
-# Include rules for downloading the WOCE release tarballs
-include $(LEVEL)/support/woce-dl.mk
-
 # Include rules for bootstrapping headers
 include $(LEVEL)/support/install-headers.mk

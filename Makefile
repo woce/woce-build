@@ -33,8 +33,6 @@ woce-toolchain: toolchain/$(WOCE_TOOLCHAIN)/.unpacked
 
 # Grab the rootfs, stage it, and add our required headers
 woce-headers: staging/$(WOCE_ARCH)/usr/include/.staged
-	$(MAKE) -C packages/web/webcore
-	$(MAKE) -C packages/web/webkit
 
 include $(LEVEL)/Makefile.common
 
@@ -43,4 +41,3 @@ clobber::
 	rm -rf rootfs
 	rm -rf staging
 	rm -rf packages/sysmgr/*/build
-	rm -rf packages/web/*/build
