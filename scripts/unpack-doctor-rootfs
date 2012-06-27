@@ -1,0 +1,30 @@
+#!/bin/sh
+
+[ -f $1 ] || exit 1
+[ -d $2 ] || exit 1
+
+NAME=`basename $1 .jar`
+ROOTFS=$2
+
+rm -rf $NAME
+mkdir -p $NAME/jar $NAME/webOS $NAME/rootfs
+unzip -q -X -d $NAME/jar $1
+tar -C $NAME/webOS -p -x -f $NAME/jar/resources/webOS.tar
+if [ -f $NAME/webOS/nova-cust-image-castle.rootfs.tar.gz ] ; then
+    tar -C $ROOTFS -p -z -x -f $NAME/webOS/nova-cust-image-castle.rootfs.tar.gz --exclude ./dev
+fi
+if [ -f $NAME/webOS/nova-cust-image-pixie.rootfs.tar.gz ] ; then
+    tar -C $ROOTFS -p -z -x -f $NAME/webOS/nova-cust-image-pixie.rootfs.tar.gz --exclude ./dev
+fi
+if [ -f $NAME/webOS/nova-cust-image-roadrunner.rootfs.tar.gz ] ; then
+    tar -C $ROOTFS -p -z -x -f $NAME/webOS/nova-cust-image-roadrunner.rootfs.tar.gz --exclude ./dev
+fi
+if [ -f $NAME/webOS/nova-cust-image-broadway.rootfs.tar.gz ] ; then
+    tar -C $ROOTFS -p -z -x -f $NAME/webOS/nova-cust-image-broadway.rootfs.tar.gz --exclude ./dev
+fi
+if [ -f $NAME/webOS/nova-cust-image-topaz.rootfs.tar.gz ] ; then
+    tar -C $ROOTFS -p -z -x -f $NAME/webOS/nova-cust-image-topaz.rootfs.tar.gz --exclude ./dev
+fi
+rm -rf $NAME
+
+exit 0

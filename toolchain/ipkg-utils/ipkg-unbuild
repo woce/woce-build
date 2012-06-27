@@ -1,0 +1,40 @@
+#!/usr/bin/env python
+
+import sys, os, re
+import arfile
+
+if (len(sys.argv) == 0):
+    print 'usage: %s: package.ipk' % sys.argv[0]
+    sys.exit(1)
+
+for filename in sys.argv[1:]:
+    m = re.match('((.*/)*)(.*)', filename)
+    pkg = m.group(3)
+    m = re.match('(.*)((.ipk)|(.deb))', filename)
+    if m:
+        pkg = m.group(1)
+
+    os.system('rm -fr %s' % pkg)
+    os.mkdir(pkg)
+    os.mkdir(pkg + '/CONTROL')
+
+    f = open(filename, "rb")
+    magic = f.read(4)
+    f.seek(0, 0)
+    if (magic == "!<ar"):
+        ar = arfile.ArFile(f)
+        ar.scan();
+        for name in ar.directory:
+            stream = ar.open(name)
+            of = open('%s/%s' % (pkg, name), 'wb')
+            of.write(stream.read())
+            of.close()
+    else:
+        os.system('cd %s; tar zxf ../%s > /dev/null' % (pkg, filename))
+
+    if os.path.exists('%s/data.tar.xz' % pkg):
+        os.system('xz -c -d %s/data.tar.xz | tar xf - -C %s' % (pkg, pkg))
+    else:
+        os.system('tar xzf %s/data.tar.gz -C %s' % (pkg, pkg))
+    os.system('tar xzf %s/control.tar.gz -C %s/CONTROL' % (pkg, pkg))
+    os.system('rm -f %s/control.tar.gz %s/data.tar.gz %s/debian-binary' % (pkg, pkg, pkg))

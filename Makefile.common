@@ -1,0 +1,40 @@
+# Common paths, rules, etc
+
+# Default rule
+.PHONY: build unpack
+build::
+
+# LEVEL should be set by every Makefile
+ifndef LEVEL
+$(error "LEVEL not set in Makefile!")
+endif
+
+# Paths to common directories
+DL_DIR=$(LEVEL)/downloads
+DOCTOR_DIR=$(LEVEL)/doctors
+TOOLCHAIN_DIR=$(LEVEL)/toolchain
+
+# Include rules for re-using global directories
+# for downloads and doctors, if they already exist
+include $(LEVEL)/support/srvln.mk
+
+# Include rules for building download targets
+include $(LEVEL)/support/dl.mk
+
+# Include information used for cross-compiling
+include $(LEVEL)/support/cross-compile.mk
+
+# Include rules for downloading doctor files
+include $(LEVEL)/support/doctors.mk
+
+# Include rules for extracting rootfs from doctors
+include $(LEVEL)/support/rootfs.mk
+
+# Include rules for downloading and extracting toolchains
+include $(LEVEL)/support/toolchains.mk
+
+# Include rules for downloading the WOCE release tarballs
+include $(LEVEL)/support/woce-dl.mk
+
+# Include rules for bootstrapping headers
+include $(LEVEL)/support/install-headers.mk

@@ -1,0 +1,38 @@
+#!/bin/sh
+
+NAME=lunasysmgr-ce
+
+APPNAME=LunaSysMgr
+
+APPID=org.webos-community-edition.${NAME}
+
+APPS=/media/cryptofs/apps
+
+[ -d ${APPS} ] || { echo "Requires webOS 1.3.5 or later" ; exit 1 ; }
+
+APPDIR=${APPS}/usr/palm/applications/${APPID}
+
+mount -o remount RW /
+
+# Remove files put onto system
+if [ -e /usr/bin/LunaSysMgr.new]
+   rm /usr/bin/LunaSysMgr.new
+fi
+
+rm /etc/rc*.d/S26replace_luna
+
+if [ -e ${APPDIR/LunaSysMgr.bak] 
+  mv ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
+fi
+
+#rm /etc/init.d/replace_luna
+
+mount -o remount RO /
+
+# Only report success (and let this package be removed)
+# if LunaSysMgr is back to its original state
+# TODO: Verify md5 or similar?
+# TODO: How does this happen? Button launched from app itself,
+# followed by a reboot?
+diff /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
+exit $?

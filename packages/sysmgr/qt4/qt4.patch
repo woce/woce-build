@@ -1,0 +1,43 @@
+diff --git a/qt4/configure b/qt4/configure
+index 0a420db..db3fee7 100755
+--- a/qt4/configure
++++ b/qt4/configure
+@@ -5635,6 +5635,8 @@ if [ "$PLATFORM_X11" = "yes" -o "$PLATFORM_QWS" = "yes" -o "$PLATFORM_QPA" = "ye
+         if [ -n "$PKG_CONFIG" ]; then
+             QT_CFLAGS_GLIB=`$PKG_CONFIG --cflags glib-2.0 gthread-2.0 2>/dev/null`
+             QT_LIBS_GLIB=`$PKG_CONFIG --libs glib-2.0 gthread-2.0 2>/dev/null`
++        else
++            QT_LIBS_GLIB="-lglib-2.0 -lgthread-2.0 -lpthread -lrt"
+         fi
+         if "$unixtests/compile.test" "$XQMAKESPEC" "$QMAKE_CONFIG" $OPT_VERBOSE "$relpath" "$outpath" config.tests/unix/glib "Glib" $L_FLAGS $I_FLAGS $l_FLAGS $QT_CFLAGS_GLIB $QT_LIBS_GLIB $X11TESTS_FLAGS ; then
+             CFG_GLIB=yes
+--- a/qt4/mkspecs/qws/linux-armv6-g++/qmake.conf
++++ b/qt4/mkspecs/qws/linux-armv6-g++/qmake.conf
+@@ -24,15 +24,20 @@
+ QMAKE_STRIP             = $$(STRIP_TMP)
+ QMAKE_LIBS_OPENGL_ES2   = -Wl,-rpath $(STAGING_LIBDIR) -lGLESv2 -lEGL
+ 
+-QMAKE_CFLAGS           += \
+-	-I$(STAGING_INCDIR)
++QMAKE_CFLAGS                += \
++  -I$(STAGING_INCDIR)          \
++  -I$(STAGING_INCDIR)/glib-2.0 \
++  -I$(STAGING_INCDIR)/GLES2
+ 
+-QMAKE_CXXFLAGS         += \
+-	-I$(STAGING_INCDIR)
++QMAKE_CXXFLAGS              += \
++  -I$(STAGING_INCDIR)          \
++  -I$(STAGING_INCDIR)/glib-2.0 \
++  -I$(STAGING_INCDIR)/GLES2
+ 
+-QMAKE_LFLAGS           += \
+-	-L$(STAGING_LIBDIR) \
+-	-Wl,-rpath $(STAGING_LIBDIR)   # <HACK> WHY DO I HAVE TO ADD THIS?
++QMAKE_LFLAGS                 += \
++  -L$(STAGING_LIBDIR)           \
++  -L$(STAGING_LIBDIR)/../../lib \
++  -Wl,-rpath $(STAGING_LIBDIR)     # <HACK> WHY DO I HAVE TO ADD THIS?
+ 
+ 
+ QMAKE_INCDIR_OPENGL_ES2 = $(STAGING_INCDIR)
