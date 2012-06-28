@@ -6,29 +6,21 @@ include $(LEVEL)/Makefile.common
 
 .PHONY: build unpack patch
 build:: build/armv7/.built
-unpack:: build/src/.unpacked
+unpack:: build/.unpacked
 
-VERSION := 4.8.0
+$(call DL,QT4)
+$(call DL,QT4_PATCH)
 
-QT4_URL := http://downloads.help.palm.com/opensource/3.0.5/qt4-$(VERSION).tar.gz
-QT4_PATCH_URL := http://downloads.help.palm.com/opensource/3.0.5/qt-$(VERSION).patch.gz
-
-QT4_DL = $(DL_DIR)/qt4-$(VERSION).tar.gz
-QT4_PATCH_DL = $(DL_DIR)/qt4-patch-$(VERSION).gz
-
-$(eval $(call DLTGZ,qt4,$(VERSION),$(QT4_URL)))
-$(eval $(call DLGZ,qt4-patch,$(VERSION),$(QT4_PATCH_URL)))
-
-build/src/.unpacked: $(QT4_DL) $(QT4_PATCH_DL) qt4.patch
+build/.unpacked: $(QT4_DL) $(QT4_PATCH_DL) qt4.patch
 	-rm -rf build
 	mkdir -p build/src
-	tar -C build/src --strip=1 -zxf $(QT4_DL)
+	$(call EXTRACT,QT4,build/src,--strip=1)
 	zcat $(QT4_PATCH_DL)| patch -Np1 -d build/src
 	patch -Np2 -d build/src < qt4.patch
 	cp qconfig-palm.h build/src/src/corelib/global/
 	touch $@
 
-build/armv7/.built: build/src/.unpacked
+build/armv7/.built: build/.unpacked
 	-rm -rf build/armv7
 	mkdir -p build/armv7
 	@echo "Using armv6 mkspec, since for now the armv7 mkspec doesn't exist"

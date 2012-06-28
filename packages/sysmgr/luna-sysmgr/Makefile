@@ -41,25 +41,19 @@ QMAKE := $(QTPATH)/bin/qmake-palm
 .PHONY: build unpack patch package
 package:: ipkgs/${APP_ID}_${VERSION}_armv7.ipk
 build:: build/armv7-stage/.built-${VERSION}
-unpack: build/src/.unpacked
+unpack: build/.unpacked
 
-LUNASYSMGR_NAME := LunaSysMgr
-LUNASYSMGR_TAG := initial
-LUNASYSMGR_URL := https://github.com/woce/$(LUNASYSMGR_NAME)/tarball/$(LUNASYSMGR_TAG)
-LUNASYSMGR_DL := $(DL_DIR)/$(LUNASYSMGR_NAME)-$(LUNASYSMGR_TAG).tar.gz
-
-# Create rule for grabbing this version
-$(eval $(call DLTGZ,$(LUNASYSMGR_NAME),$(LUNASYSMGR_TAG),$(LUNASYSMGR_URL)))
+$(call DL,LUNASYSMGR)
 
 ### Unpack the software and build it
-build/src/.unpacked: sysmgr.patch $(LUNASYSMGR_DL)
+build/.unpacked: sysmgr.patch $(LUNASYSMGR_DL)
 	-rm -rf build
 	mkdir -p build/src
-	tar -C build/src --strip=1 -zxf $(LUNASYSMGR_DL)
+	$(call EXTRACT,LUNASYSMGR,build/src,--strip=1)
 	patch -Np2 -d build/src < sysmgr.patch
 	touch $@
 
-build/armv7-stage/.built-${VERSION}: build/src/.unpacked
+build/armv7-stage/.built-${VERSION}: build/.unpacked
 	-rm -rf build/armv7-stage
 	mkdir -p build/armv7-stage
 	cd build/armv7-stage && \

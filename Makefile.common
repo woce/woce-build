@@ -2,7 +2,22 @@
 
 # Default rule
 .PHONY: build unpack
+.PHONY: default woce webos-ports custom
+
+ifndef CONFIG
+default: woce
+endif
+
 build::
+
+woce:
+	$(MAKE) CONFIG=woce build
+webos-ports:
+	$(MAKE) CONFIG=webos-ports build
+custom:
+	$(MAKE) CONFIG=custom build
+test:
+	$(MAKE) CONFIG=test build
 
 # LEVEL should be set by every Makefile
 ifndef LEVEL
@@ -20,6 +35,11 @@ include $(LEVEL)/support/srvln.mk
 
 # Include rules for building download targets
 include $(LEVEL)/support/dl.mk
+
+# Include 'metadata-like' file for specifying sources
+ifdef CONFIG
+	include $(LEVEL)/config/$(CONFIG).mk
+endif
 
 # Include information used for cross-compiling
 include $(LEVEL)/support/cross-compile.mk
