@@ -40,34 +40,35 @@ QMAKE := $(QTPATH)/bin/qmake-palm
 
 .PHONY: build unpack patch package
 package:: ipkgs/${APP_ID}_${VERSION}_armv7.ipk
-build:: build/armv7-stage/.built-${VERSION}
-unpack: build/.unpacked
+build:: build/$(CONFIG)/armv7-stage/.built-${VERSION}
+unpack: build/$(CONFIG)/.unpacked
 
 $(call DL,LUNASYSMGR)
 
 ### Unpack the software and build it
-build/.unpacked: sysmgr.patch $(LUNASYSMGR_DL)
-	-rm -rf build
-	mkdir -p build/src
-	$(call EXTRACT,LUNASYSMGR,build/src,--strip=1)
-	patch -Np2 -d build/src < sysmgr.patch
+build/$(CONFIG)/.unpacked: sysmgr.patch $(LUNASYSMGR_DL)
+	-rm -rf build/$(CONFIG)
+	mkdir -p build/$(CONFIG)/src
+	$(call EXTRACT,LUNASYSMGR,build/$(CONFIG)/src,--strip=1)
+	patch -Np2 -d build/$(CONFIG)/src < sysmgr.patch
 	touch $@
 
-build/armv7-stage/.config-${VERSION}: build/.unpacked
-	-rm -rf build/armv7-stage
-	mkdir -p build/armv7-stage
-	cd build/armv7-stage && \
+build/$(CONFIG)/armv7-stage/.config-${VERSION}: build/$(CONFIG)/.unpacked
+	-rm -rf build/$(CONFIG)/armv7-stage
+	mkdir -p build/$(CONFIG)/armv7-stage
+	cd build/$(CONFIG)/armv7-stage && \
 		$(CCENV) \
 		PATH=$(QTPATH)/bin:$$PATH \
 		$(QMAKE) ../src \
 		-spec qws/linux-armv6-g++
 	touch $@
 
-build/armv7-stage/.built-${VERSION}: build/armv7-stage/.config-${VERSION}
-	$(CCENV) $(MAKE) -C build/armv7-stage
+build/$(CONFIG)/armv7-stage/.built-${VERSION}: build/$(CONFIG)/armv7-stage/.config-${VERSION}
+	$(CCENV) $(MAKE) -C build/$(CONFIG)/armv7-stage
 
 ### Packaging magic
-build/.built-${VERSION}: build/armv7.built-${VERSION}
+## TODO: When we revisit packaging, fix this up to do the 'right' thing regarding CONFIG
+build/.built-${VERSION}: build/$(CONFIG)/armv7.built-${VERSION}
 
 ### Headless app packaging fun
 build/%.built-${VERSION}: build/%-stage/.built-${VERSION} ${DL_DIR}/headlessapp-${HEADLESSAPP_VERSION}.tar.gz

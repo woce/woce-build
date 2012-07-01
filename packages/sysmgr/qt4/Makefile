@@ -4,6 +4,9 @@ LEVEL=../../..
 
 include $(LEVEL)/Makefile.common
 
+# Intentionally not making this rebuild for different
+# CONFIG, until that's something we need.
+# (qt4 takes a long time to configure+build!)
 .PHONY: build unpack patch
 build:: build/armv7/.built
 unpack:: build/.unpacked
