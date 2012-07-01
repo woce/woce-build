@@ -23,7 +23,7 @@ QT4_VERSION := 4.8.0
 QT4_URL := http://downloads.help.palm.com/opensource/3.0.5/qt4-$(QT4_VERSION).tar.gz
 QT4_DLTYPE := TGZ
 
-QT4_PATCH_NAME := qt4
+QT4_PATCH_NAME := qt4-patch
 QT4_PATCH_VERSION := $(QT4_VERSION)
 QT4_PATCH_URL := http://downloads.help.palm.com/opensource/3.0.5/qt-$(QT4_VERSION).patch.gz
 QT4_PATCH_DLTYPE := GZ

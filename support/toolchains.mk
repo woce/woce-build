@@ -7,7 +7,7 @@ define TCRULE
 
 $1_NAME := arm
 $1_URL := https://sourcery.mentor.com/public/gnu_toolchain/arm-none-linux-gnueabi/arm-$($1_VERSION).tar.bz2
-$1_DLTYPE := TGZ
+$1_DLTYPE := BZ2
 $$(call DL,$1)
 
 $(TOOLCHAIN_DIR)/$1/.unpacked: $$($1_DL)
