@@ -3,18 +3,17 @@
 # This file defines the sources used to drive the 'webos-ports' build.
 #
 
-$(error The "webos-ports" build isn't supported yet.)
-
+$(warning The "webos-ports" build isn't supported yet.)
 # Build-support
 BUILD_SUPPORT_NAME := build-support
 BUILD_SUPPORT_VERSION := v0.0.1
-BUILD_SUPPORT_URL := https://github.com/webos-ports/$(BUILD_SUPPORT_NAME)/tarball/$(BUILD_SUPPORT_VERSION)
+BUILD_SUPPORT_URL := https://github.com/webOS-ports/$(BUILD_SUPPORT_NAME)/tarball/$(BUILD_SUPPORT_VERSION)
 BUILD_SUPPORT_DLTYPE := TGZ
 
 # LunaSysMgr
-LUNASYSMGR_NAME := LunaSysMgr
-LUNASYSMGR_VERSION := initial
-LUNASYSMGR_URL := https://github.com/webos-ports/$(LUNASYSMGR_NAME)/tarball/$(LUNASYSMGR_VERSION)
+LUNASYSMGR_NAME := WPLunaSysMgr
+LUNASYSMGR_VERSION := v0.0.1
+LUNASYSMGR_URL := https://github.com/webOS-ports/LunaSysMgr/tarball/$(LUNASYSMGR_VERSION)
 LUNASYSMGR_DLTYPE := TGZ
 
 # QT4 and patch

@@ -46,11 +46,10 @@ unpack: build/$(CONFIG)/.unpacked
 $(call DL,LUNASYSMGR)
 
 ### Unpack the software and build it
-build/$(CONFIG)/.unpacked: sysmgr.patch $(LUNASYSMGR_DL)
+build/$(CONFIG)/.unpacked: $(LUNASYSMGR_DL)
 	-rm -rf build/$(CONFIG)
 	mkdir -p build/$(CONFIG)/src
 	$(call EXTRACT,LUNASYSMGR,build/$(CONFIG)/src,--strip=1)
-	patch -Np2 -d build/$(CONFIG)/src < sysmgr.patch
 	touch $@
 
 build/$(CONFIG)/armv7-stage/.config-${VERSION}: build/$(CONFIG)/.unpacked
