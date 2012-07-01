@@ -18,7 +18,7 @@ build:: linkdirs
 	$(MAKE) luna-sysmgr
 	@echo
 	@echo "Build Success!  New LunaSysMgr available at:"
-	@echo `readlink -f packages/sysmgr/luna-sysmgr/build/armv7-stage/release-topaz/LunaSysMgr`
+	@echo `readlink -f packages/sysmgr/luna-sysmgr/build/$(CONFIG)/armv7-stage/release-topaz/LunaSysMgr`
 	@echo
 
 # For now, manually create phony targets for building each package,
