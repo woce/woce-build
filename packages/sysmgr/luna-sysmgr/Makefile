@@ -53,7 +53,7 @@ build/.unpacked: sysmgr.patch $(LUNASYSMGR_DL)
 	patch -Np2 -d build/src < sysmgr.patch
 	touch $@
 
-build/armv7-stage/.built-${VERSION}: build/.unpacked
+build/armv7-stage/.config-${VERSION}: build/.unpacked
 	-rm -rf build/armv7-stage
 	mkdir -p build/armv7-stage
 	cd build/armv7-stage && \
@@ -61,12 +61,13 @@ build/armv7-stage/.built-${VERSION}: build/.unpacked
 		PATH=$(QTPATH)/bin:$$PATH \
 		$(QMAKE) ../src \
 		-spec qws/linux-armv6-g++
-	$(CCENV) $(MAKE) -C build/armv7-stage
 	touch $@
+
+build/armv7-stage/.built-${VERSION}: build/armv7-stage/.config-${VERSION}
+	$(CCENV) $(MAKE) -C build/armv7-stage
 
 ### Packaging magic
 build/.built-${VERSION}: build/armv7.built-${VERSION}
-	touch $@
 
 ### Headless app packaging fun
 build/%.built-${VERSION}: build/%-stage/.built-${VERSION} ${DL_DIR}/headlessapp-${HEADLESSAPP_VERSION}.tar.gz
