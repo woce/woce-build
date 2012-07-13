@@ -14,7 +14,7 @@ $(error Remove this and the line above to proceed)
 
 # Build-support
 BUILD_SUPPORT_NAME := build-support
-BUILD_SUPPORT_VERSION := v0.0.1
+BUILD_SUPPORT_VERSION := v0.0.2
 BUILD_SUPPORT_URL := https://github.com/woce/$(BUILD_SUPPORT_NAME)/tarball/$(BUILD_SUPPORT_VERSION)
 BUILD_SUPPORT_DLTYPE := TGZ
 
