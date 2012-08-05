@@ -15,13 +15,13 @@ APPDIR=${APPS}/usr/palm/applications/${APPID}
 mount -o remount RW /
 
 # Remove files put onto system
-if [ -e /usr/bin/LunaSysMgr.new]
+if [ -e /usr/bin/LunaSysMgr.new ]
    rm /usr/bin/LunaSysMgr.new
 fi
 
 rm /etc/rc*.d/S26replace_luna
 
-if [ -e ${APPDIR/LunaSysMgr.bak}]
+if [ -e ${APPDIR/LunaSysMgr.bak} ]
   mv ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
 fi
 

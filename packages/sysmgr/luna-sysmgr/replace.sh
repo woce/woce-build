@@ -13,8 +13,8 @@ mount -o remount RW /
 
 /sbin/stop ${APPNAME} || true
 
-if [ -e /usr/bin/LunaSysMgr.*]
-   mv /usr/bin/LunaSysMgr.* /usr/bin/LunaSysMgr
+if [ -e /usr/bin/LunaSysMgr.* ]
+   mv /media/cryptofs/apps/usr/palm/applications/org.webos-community-edition.lunasysmgr-ce/bin/LunaSysMgr /usr/bin/LunaSysMgr
 fi
 
 mount -o remount RO /
