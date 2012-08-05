@@ -9,6 +9,9 @@
 # The last directly uses the specified source tree, symlinking
 # it into the appropriate build directory.
 
+$(warning You need to customize this to work correctly.)
+$(error Remove this and the line above to proceed)
+
 # Build-support
 BUILD_SUPPORT_NAME := build-support
 BUILD_SUPPORT_VERSION := v0.0.2
