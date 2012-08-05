@@ -21,18 +21,22 @@ fi
 
 rm /etc/rc*.d/S26replace_luna
 
-if [ -e ${APPDIR/LunaSysMgr.bak] 
+if [ -e ${APPDIR/LunaSysMgr.bak}]
   mv ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
 fi
 
-#rm /etc/init.d/replace_luna
+if [ -e ${APPDIR}/bin/replace.sh ]
+  ${APPDIR}/bin/replace.sh &
+fi
 
 mount -o remount RO /
 
+# XXX: rrix - We lose our terminal when we stop LSM, this code never
+# actually gets ran
 # Only report success (and let this package be removed)
 # if LunaSysMgr is back to its original state
 # TODO: Verify md5 or similar?
 # TODO: How does this happen? Button launched from app itself,
 # followed by a reboot?
-diff /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
-exit $?
+# diff /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
+# exit $?

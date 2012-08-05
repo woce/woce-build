@@ -27,6 +27,4 @@ ln -s /etc/init.d/replace_luna /etc/rcU.d/S26replace_luna
 # Install desired new copy for the replacer to find
 cp ${APPDIR}/bin/LunaSysMgr /usr/bin/LunaSysMgr.new
 
-mount -o remount RO /
-
 exit 0

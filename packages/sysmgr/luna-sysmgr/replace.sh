@@ -13,7 +13,7 @@ mount -o remount RW /
 
 /sbin/stop ${APPNAME} || true
 
-if [ -e /usr/bin/LunaSysMgr.*] 
+if [ -e /usr/bin/LunaSysMgr.*]
    mv /usr/bin/LunaSysMgr.* /usr/bin/LunaSysMgr
 fi
 
