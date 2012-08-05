@@ -36,57 +36,57 @@ ifndef CATEGORY
 PREWARE_SANITY += $(error "Please define CATEGORY in your Makefile")
 endif
 
-ipkgs/${APP_ID}_${VERSION}_%.ipk: build/.built-${VERSION}
-	rm -f ipkgs/${APP_ID}_${VERSION}_$*.ipk
-	rm -f build/$*/CONTROL/conffiles
-	${MAKE} build/$*/CONTROL/conffiles
-	rm -f build/$*/CONTROL/control
-	${MAKE} build/$*/CONTROL/control
-	rm -f build/$*/CONTROL/postinst
-	${MAKE} build/$*/CONTROL/postinst
-	rm -f build/$*/CONTROL/prerm
-	${MAKE} build/$*/CONTROL/prerm
-	rm -f build/$*/CONTROL/conffiles
-	${MAKE} build/$*/CONTROL/conffiles
+ipkgs/${APP_ID}-${CONFIG}_${VERSION}_%.ipk: build/$(CONFIG)/.built-${VERSION}
+	rm -f ipkgs/${APP_ID}-${CONFIG}_${VERSION}_$*.ipk
+	rm -f build/$(CONFIG)/$*/CONTROL/conffiles
+	${MAKE} build/$(CONFIG)/$*/CONTROL/conffiles
+	rm -f build/$(CONFIG)/$*/CONTROL/control
+	${MAKE} build/$(CONFIG)/$*/CONTROL/control
+	rm -f build/$(CONFIG)/$*/CONTROL/postinst
+	${MAKE} build/$(CONFIG)/$*/CONTROL/postinst
+	rm -f build/$(CONFIG)/$*/CONTROL/prerm
+	${MAKE} build/$(CONFIG)/$*/CONTROL/prerm
+	rm -f build/$(CONFIG)/$*/CONTROL/conffiles
+	${MAKE} build/$(CONFIG)/$*/CONTROL/conffiles
 	mkdir -p ipkgs
-	if [ -n "${SIGNER}" ] && [ -e $(LEVEL)/../sign/${SIGNER}.crt ] && [ -e $(LEVEL)/../sign/${SIGNER}.key ] ; then \
-	  ( cd build ; \
+	if [ -n "${SIGNER}" ] && [ -e $(LEVEL)/../../sign/${SIGNER}.crt ] && [ -e $(LEVEL)/../../sign/${SIGNER}.key ] ; then \
+	  ( cd build/$(CONFIG) ; \
 	    TAR_OPTIONS="--wildcards --mode=g-s" \
-	    $(LEVEL)/../toolchain/ipkg-utils/ipkg-build -o 0 -g 0 ${BLDFLAGS} \
-	    -s $(shell cd $(LEVEL)/.. ; pwd)/sign/${SIGNER}.crt -k $(shell cd $(LEVEL)/.. ; pwd)/sign/${SIGNER}.key \
+	    $(LEVEL)/../../toolchain/ipkg-utils/ipkg-build -o 0 -g 0 ${BLDFLAGS} \
+	    -s $(shell cd $(LEVEL)/../.. ; pwd)/sign/${SIGNER}.crt -k $(shell cd $(LEVEL)/../.. ; pwd)/sign/${SIGNER}.key \
 	    $* ) ; \
 	else \
-	  ( cd build ; \
+	  ( cd build/$(CONFIG) ; \
 	    TAR_OPTIONS="--wildcards --mode=g-s" \
-	    $(LEVEL)/../toolchain/ipkg-utils/ipkg-build -o 0 -g 0 ${BLDFLAGS} $* ) ; \
+	    $(LEVEL)/../../toolchain/ipkg-utils/ipkg-build -o 0 -g 0 ${BLDFLAGS} $* ) ; \
 	fi
-	mv build/${APP_ID}_${VERSION}_$*.ipk $@
+	mv build/$(CONFIG)/${APP_ID}_${VERSION}_$*.ipk $@
 
-build/%/CONTROL/postinst:
+build/$(CONFIG)/%/CONTROL/postinst:
 	if [ -e control/postinst ] ; then \
 	  install -m 755 control/postinst $@ ; \
 	fi
 
-build/%/CONTROL/prerm:
+build/$(CONFIG)/%/CONTROL/prerm:
 	if [ -e control/prerm ] ; then \
 	  install -m 755 control/prerm $@ ; \
 	fi
 
-build/%/CONTROL/conffiles:
+build/$(CONFIG)/%/CONTROL/conffiles:
 	if [ -e control/conffiles ] ; then \
 	  install -m 755 control/conffiles $@ ; \
 	fi
 
 ifeq ("${TYPE}", "Application")
-build/%/CONTROL/control: build/%/usr/palm/applications/${APP_ID}/appinfo.json
+build/${CONFIG}/%/CONTROL/control: build/${CONFIG}/%/usr/palm/applications/${APP_ID}/appinfo.json
 else ifdef SRC_OPTWARE
-build/%/CONTROL/control: build/%.control
+build/${CONFIG}/%/CONTROL/control: build/${CONFIG}/%.control
 else
-build/%/CONTROL/control: /dev/null
+build/${CONFIG}/%/CONTROL/control: /dev/null
 endif
 	$(call PREWARE_SANITY)
 	rm -f $@
-	mkdir -p build/$*/CONTROL
+	mkdir -p build/${CONFIG}/$*/CONTROL
 	echo "Package: ${APP_ID}" > $@
 	/bin/echo -n "Version: " >> $@
 ifdef VERSION
@@ -169,7 +169,7 @@ ifdef CATEGORY
 endif
 ifdef SRC_IPKG
 	/bin/echo -n ", \"LastUpdated\":\"" >> $@
-	$(LEVEL)/scripts/timestamp.py ${DL_DIR}/${APP_ID}_${VERSION}_all.ipk >> $@
+	$(LEVEL)/scripts/timestamp.py ${DL_DIR}/${APP_ID}-${CONFIG}_${VERSION}_all.ipk >> $@
 	/bin/echo -n "\"" >> $@
 else ifdef SRC_TGZ
 	/bin/echo -n ", \"LastUpdated\":\"" >> $@
@@ -258,4 +258,4 @@ clobber::
 
 .PHONY: clean
 clean::
-	rm -rf build/src build/src-* build/arm build/armv6 build/armv7 build/i686
+	rm -rf build/$(CONFIG)/src build/$(CONFIG)/src-* build/$(CONFIG)/arm build/$(CONFIG)/armv6 build/$(CONFIG)/armv7 build/$(CONFIG)/i686
