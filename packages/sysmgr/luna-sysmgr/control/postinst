@@ -16,7 +16,7 @@ APPDIR=${APPS}/usr/palm/applications/${APPID}
 cp /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
 
 # Install script to swap Luna copies on shutdown
-if [ -e ${APPDIR}/bin/replace.sh ]
+if [ -e ${APPDIR}/bin/replace.sh ]; then
   ${APPDIR}/bin/replace.sh &
 fi
 

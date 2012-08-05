@@ -15,21 +15,24 @@ APPDIR=${APPS}/usr/palm/applications/${APPID}
 mount -o remount RW /
 
 # Remove files put onto system
-if [ -e /usr/bin/LunaSysMgr.new ]
+if [ -e /usr/bin/LunaSysMgr.new ]; then
    rm /usr/bin/LunaSysMgr.new
 fi
 
 rm /etc/rc*.d/S26replace_luna
 
-if [ -e ${APPDIR/LunaSysMgr.bak} ]
+if [ -e ${APPDIR/LunaSysMgr.bak} ]; then
   mv ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
 fi
 
-if [ -e ${APPDIR}/bin/replace.sh ]
+if [ -e ${APPDIR}/bin/replace.sh ]; then
   ${APPDIR}/bin/replace.sh &
 fi
 
 mount -o remount RO /
+
+# Password hash format differs between LSM and LSM-CE
+rm /var/luna/data/.passcode
 
 # XXX: rrix - We lose our terminal when we stop LSM, this code never
 # actually gets ran
