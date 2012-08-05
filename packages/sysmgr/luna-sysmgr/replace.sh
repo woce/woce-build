@@ -7,8 +7,6 @@ NAME=LunaSysMgr-CE
 
 APPNAME=LunaSysMgr
 
-# TODO: Abort if Luna is running!
-
 mount -o remount RW /
 
 /sbin/stop ${APPNAME} || true
