@@ -12,15 +12,13 @@ APPS=/media/cryptofs/apps
 
 APPDIR=${APPS}/usr/palm/applications/${APPID}
 
+# Create a copy of the init script on installation
+cp ${APPDIR}/LunaSysMgr_eventd /etc/event.d/LunaSysMgr
+
 # Create copy of existing LunaSysMgr on installation.
 cp /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
 
 # Install desired new copy for the replacer to find
 cp ${APPDIR}/bin/LunaSysMgr /usr/bin/LunaSysMgr.new
-
-# Install script to swap Luna copies on shutdown
-if [ -e ${APPDIR}/bin/replace.sh ]; then
-  ${APPDIR}/bin/replace.sh &
-fi
 
 exit 0

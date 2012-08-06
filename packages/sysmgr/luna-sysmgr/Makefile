@@ -75,11 +75,9 @@ build/$(CONFIG)/%.built-${VERSION}: build/$(CONFIG)/%-stage/.built-${VERSION} ${
 	mkdir -p build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}
 	tar -C build/$(CONFIG)/$*/usr/palm/applications/${APP_ID} -xf ${DL_DIR}/headlessapp-${HEADLESSAPP_VERSION}.tar.gz
 	rm -rf build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/.git
-	tar -cf - control | \
+	tar -cf - LunaSysMgr_event | \
 	tar -C build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/ -xf -
 	mkdir -p build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/bin
-	tar -cf - replace.sh restore.sh | \
-	tar -C build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/bin/ -xf -
 	tar -C build/$(CONFIG)/$*-stage/release-topaz/ -cf - LunaSysMgr | \
 	tar -C build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/bin/ -xf -
 	echo "{" > build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json

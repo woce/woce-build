@@ -1,0 +1,53 @@
+# LunaSysMgr must start after the configurator to make sure the DB is initialized before the apps run
+start on stopped configurator
+
+# Stop when the Software Update tool is about to install an update.  The tool
+# uses upstart to restart jobs when the installation is complete.
+stop on started start_update
+
+respawn
+
+pre-start script
+	echo "1" > /proc/sys/vm/overcommit_memory
+	mkdir -p /var/luna/preferences
+	if grep -qs "qemux86" /etc/hostname ; then
+		touch /var/luna/preferences/ran-first-use
+	fi
+	if [ ! -f /var/luna/preferences/ran-first-use ]
+	then
+		echo " -u minimal -a com.palm.app.firstuse" > /var/luna/preferences/sysmgr-args
+	else
+		echo "" > /var/luna/preferences/sysmgr-args
+	fi
+
+	if [ ! -e /usr/bin/LunaSysMgr.* ]
+	then
+		mount -o remount RW /
+		mv /usr/bin/LunaSysMgr.* /usr/bin/LunaSysMgr
+		mount -o remount RO /
+	end
+
+end script
+
+script
+
+	# Choose our malloc
+	export LD_PRELOAD="/usr/lib/libptmalloc3.so /usr/lib/libmemcpy.so"
+
+	#check for MFTboot flag and attempt to launch MFT if present
+	if [ `grep -c MFTboot /proc/cmdline` == "1" ]
+	then
+		#check for TED app
+		if [ -f /var/mft/usr/bin/ted ]
+		then
+			export LD_LIBRARY_PATH=/var/mft/usr/lib;export WXDFB_FONTPATH=/var/mft/usr/share/wx/fonts/:;exec /var/mft/usr/bin/ted -m --dfb:no-vt --dfb:no-cursor --dfb:bg-color=00000000 --dfb:pixelformat=ARGB
+		else
+			exec /usr/bin/LunaSysMgr -s `cat /var/luna/preferences/sysmgr-args`
+		fi
+	fi
+	if grep -qs "qemux86" /etc/hostname ; then
+		export HOME=/var/home/root
+	fi
+	exec ionice -c 2 -n 0 /usr/bin/LunaSysMgr -s `cat /var/luna/preferences/sysmgr-args`
+end script
+

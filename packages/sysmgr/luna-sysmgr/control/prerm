@@ -19,15 +19,12 @@ if [ -e /usr/bin/LunaSysMgr.new ]; then
    rm /usr/bin/LunaSysMgr.new
 fi
 
-rm /etc/rc*.d/S26replace_luna
-
 if [ -e ${APPDIR/LunaSysMgr.bak} ]; then
-  mv ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
+  cp ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
 fi
 
-if [ -e ${APPDIR}/bin/replace.sh ]; then
-  ${APPDIR}/bin/replace.sh &
-fi
+/sbin/stop ${APPNAME}
+/sbin/start ${APPNAME}
 
 mount -o remount RO /
 
