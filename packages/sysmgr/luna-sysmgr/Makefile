@@ -75,6 +75,8 @@ build/$(CONFIG)/%.built-${VERSION}: build/$(CONFIG)/%-stage/.built-${VERSION} ${
 	mkdir -p build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}
 	tar -C build/$(CONFIG)/$*/usr/palm/applications/${APP_ID} -xf ${DL_DIR}/headlessapp-${HEADLESSAPP_VERSION}.tar.gz
 	rm -rf build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/.git
+	tar -cf - icon.png | \
+	tar -C build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/ -xf -
 	tar -cf - LunaSysMgr_event | \
 	tar -C build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/ -xf -
 	mkdir -p build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/bin
