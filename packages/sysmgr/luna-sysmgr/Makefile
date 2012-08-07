@@ -87,7 +87,10 @@ build/$(CONFIG)/%.built-${VERSION}: build/$(CONFIG)/%-stage/.built-${VERSION} ${
 	echo "\"id\": \"${APP_ID}\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
 	echo "\"version\": \"${VERSION}\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
 	echo "\"vendor\": \"WebOS Ports\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
-	echo "\"type\": \"web\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
+	echo "\"type\": \"osApp\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
+	echo "\"PostInstallFlags\": \"RestartLuna\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
+	echo "\"PostUpdateFlags\": \"RestartLuna\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
+	echo "\"PostRemoveFlags\": \"RestartLuna\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
 	echo "\"main\": \"index.html\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
 	echo "\"icon\": \"icon.png\"," >> build/$(CONFIG)/$*/usr/palm/applications/${APP_ID}/appinfo.json
 ifdef APPINFO_DESCRIPTION
