@@ -23,13 +23,10 @@ if [ -e ${APPDIR/LunaSysMgr.bak} ]; then
   cp ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
 fi
 
-/sbin/stop ${APPNAME}
-/sbin/start ${APPNAME}
-
-mount -o remount RO /
-
 # Password hash format differs between LSM and LSM-CE
 rm /var/luna/data/.passcode
+
+mount -o remount RO /
 
 # XXX: rrix - We lose our terminal when we stop LSM, this code never
 # actually gets ran
