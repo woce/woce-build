@@ -33,4 +33,6 @@ if [ -e /var/luna/data/.passcode ]; then
 fi
 echo "Remove successful, remounting"
 
+mount -o remount ro /
+
 exit 0
