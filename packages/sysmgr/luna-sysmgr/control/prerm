@@ -24,7 +24,9 @@ if [ -e ${APPDIR/LunaSysMgr.bak} ]; then
 fi
 
 # Password hash format differs between LSM and LSM-CE
-rm /var/luna/data/.passcode
+if [ -e /var/luna/data/.passcode ]; then
+  rm /var/luna/data/.passcode
+fi
 
 mount -o remount RO /
 
