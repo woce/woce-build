@@ -22,9 +22,9 @@ pre-start script
 
 	if [ ! -e /usr/bin/LunaSysMgr.* ]
 	then
-		mount -o remount RW /
+		mount -o remount rw /
 		mv /usr/bin/LunaSysMgr.* /usr/bin/LunaSysMgr
-		mount -o remount RO /
+		mount -o remount ro /
 	end
 
 end script
