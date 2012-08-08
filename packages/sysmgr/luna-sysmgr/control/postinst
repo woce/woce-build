@@ -16,7 +16,7 @@ APPDIR=${APPS}/usr/palm/applications/${APPID}
 cp ${APPDIR}/LunaSysMgr_eventd /etc/event.d/LunaSysMgr
 
 # Create copy of existing LunaSysMgr on installation.
-cp /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
+mv /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
 
 # Install desired new copy for the replacer to find
 cp ${APPDIR}/bin/LunaSysMgr /usr/bin/LunaSysMgr.new
