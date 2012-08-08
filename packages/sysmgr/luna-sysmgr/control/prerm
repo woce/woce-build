@@ -12,7 +12,7 @@ APPS=/media/cryptofs/apps
 
 APPDIR=${APPS}/usr/palm/applications/${APPID}
 
-mount -o remount RW /
+mount -o remount rw /
 
 # Remove files put onto system
 if [ -e /usr/bin/LunaSysMgr.new ]; then
@@ -28,7 +28,7 @@ if [ -e /var/luna/data/.passcode ]; then
   rm /var/luna/data/.passcode
 fi
 
-mount -o remount RO /
+mount -o remount ro /
 
 # XXX: rrix - We lose our terminal when we stop LSM, this code never
 # actually gets ran
