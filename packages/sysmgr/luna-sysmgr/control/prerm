@@ -35,12 +35,4 @@ echo "Remove successful, remounting"
 
 mount -o remount ro /
 
-# XXX: rrix - We lose our terminal when we stop LSM, this code never
-# actually gets ran
-# Only report success (and let this package be removed)
-# if LunaSysMgr is back to its original state
-# TODO: Verify md5 or similar?
-# TODO: How does this happen? Button launched from app itself,
-# followed by a reboot?
-# diff /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
-# exit $?
+exit 0
