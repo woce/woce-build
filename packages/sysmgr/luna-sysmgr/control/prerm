@@ -13,7 +13,7 @@ APPS=/media/cryptofs/apps
 APPDIR=${APPS}/usr/palm/applications/${APPID}
 
 echo "Remounting RW"
-mount -o remount rw /
+mount -o remount RW /
 
 # Remove files put onto system
 echo "Remount successful, removing new LSM"
@@ -26,13 +26,16 @@ if [ -e ${APPDIR/LunaSysMgr.bak} ]; then
   cp ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
 fi
 
-echo "Restore successful, removing passcode"
+echo "Restore successful, removing any passcode"
 # Password hash format differs between LSM and LSM-CE
 if [ -e /var/luna/data/.passcode ]; then
+  echo "we found a passcode"
   rm /var/luna/data/.passcode
+  echo "we removed a passcode"
+else
+  echo "we didn't find a passcode"
 fi
-echo "Remove successful, remounting"
 
-mount -o remount ro /
+mount -o remount RO /
 
 exit 0

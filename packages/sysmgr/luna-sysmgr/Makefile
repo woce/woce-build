@@ -1,14 +1,14 @@
 ###  Packaging metadata
 NAME  = lunasysmgr-ce
 TITLE = LunaSysMgr-CE
-APP_ID   = org.webos-community-edition.${NAME}
+APP_ID   = org.webos-ports.${NAME}
 SIGNER   = org.webos-ports
 VERSION  = 0.0.1
-TYPE     = Application
-CATEGORY = System Utilities
+TYPE     = OS Application
+CATEGORY = GUI 
 HOMEPAGE = http://www.webos-ports.org/wiki/Application:LunaSysMgr-CE
 	# TODO: Fix this icon! :)
-ICON     = http://www.webos-internals.org/images/a/a5/X.png
+ICON     = http://www.webos-internals.org/images/2/2c/LunaCommunityEdition.png
 MAINTAINER = WebOS Ports
 DESCRIPTION = ${APPINFO_DESCRIPTION}
 APPINFO_DESCRIPTION = Luna SysManager is the user interface on webOS.<br>
