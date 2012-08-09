@@ -3,7 +3,7 @@ NAME  = lunasysmgr-ce
 TITLE = LunaSysMgr-CE
 APP_ID   = org.webos-ports.${NAME}
 SIGNER   = org.webos-ports
-VERSION  = 0.0.1
+VERSION  = 0.0.2
 TYPE     = OS Application
 CATEGORY = GUI 
 HOMEPAGE = http://www.webos-ports.org/wiki/Application:LunaSysMgr-CE
@@ -17,6 +17,7 @@ CHANGELOG = \
 0.0.1: Initial testing release.
 
 APPINFO_CHANGELOG = [ \
+{ "version" : "0.0.2",  "log" : [ "First Patched Release" ] } \
 { "version" : "0.0.1",  "log" : [ "Initial testing release" ] } \
 
 LICENSE  = Apache 2.0 License
