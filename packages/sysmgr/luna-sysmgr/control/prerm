@@ -1,10 +1,10 @@
 #!/bin/sh
 
-NAME=lunasysmgr-ce
+NAME=lunasysmgrce
 
 APPNAME=LunaSysMgr
 
-APPID=org.webos-community-edition.${NAME}
+APPID=org.webosports.${NAME}
 
 APPS=/media/cryptofs/apps
 
