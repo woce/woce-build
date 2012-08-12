@@ -37,6 +37,6 @@ TWEAKSDIR=/media/cryptofs/apps/usr/palm/services/org.webosinternals.tweaks.prefs
 
 # Remove Tweaks .json files
 cd ${TWEAKSDIR}
-rm `ls /media/cryptofs/apps/usr/palm/applications/org.webosports.lunasysmgrce/files`
+rm `ls /media/cryptofs/apps/usr/palm/applications/org.webosports.lunasysmgrce/tweaks`
 
 exit 0
