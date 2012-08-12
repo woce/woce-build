@@ -3,7 +3,7 @@ NAME  = lunasysmgrce
 TITLE = LunaSysMgr CE
 APP_ID   = org.webosports.${NAME}
 SIGNER   = org.webosports
-VERSION  = 3.0.5-ce-alpha
+VERSION  = 4.0.0-ce-alpha
 TYPE     = OS Application
 CATEGORY = GUI 
 HOMEPAGE = http://www.webos-ports.org/wiki/Application:LunaSysMgr-CE
@@ -14,10 +14,13 @@ DESCRIPTION = ${APPINFO_DESCRIPTION}
 APPINFO_DESCRIPTION = Luna SysManager is the user interface for webOS.<br>
 
 CHANGELOG = \
-0.0.1: Initial testing release.
+4.0.0-ce-alpha: First Patched Release. \
+3.0.5-ce: Initial testing release.
 
 APPINFO_CHANGELOG = [ \
-{ "version" : "3.0.5",  "log" : [ "Initial testing release" ] } \
+{ "version" : "4.0.0-ce-alpha",  "log" : [ "First Patched Release" ] }, \
+{ "version" : "3.0.5-ce",  "log" : [ "Initial testing release" ] } \
+]
 
 LICENSE  = Apache 2.0 License
 HEADLESSAPP_VERSION = 0.2.0

@@ -1,41 +1,42 @@
 #!/bin/sh
+PID=org.webosports.lunasysmgrce
 
-NAME=lunasysmgrce
-
-APPNAME=LunaSysMgr
-
-APPID=org.webosports.${NAME}
+# Handle execution as pmPostInstall.script
+if [ -z "$IPKG_OFFLINE_ROOT" ]; then
+IPKG_OFFLINE_ROOT=/media/cryptofs/apps
+mount -o remount,rw /
+fi
 
 APPS=/media/cryptofs/apps
 
 [ -d ${APPS} ] || { echo "Requires webOS 1.3.5 or later" ; exit 1 ; }
 
-APPDIR=${APPS}/usr/palm/applications/${APPID}
+APPDIR=${APPS}/usr/palm/applications/${PID}
 
-echo "Remounting RW"
-mount -o remount RW /
-
-# Remove files put onto system
-echo "Remount successful, removing new LSM"
-if [ -e /usr/bin/LunaSysMgr.new ]; then
-   rm /usr/bin/LunaSysMgr.new
+# Cleanup any files that might confuse the replacer script
+if [ -e /usr/bin/LunaSysMgr.* ]; then
+	rm -f /usr/bin/LunaSysMgr.*
 fi
 
 echo "Remove successful, restoring old LSM"
 if [ -e ${APPDIR/LunaSysMgr.bak} ]; then
-  cp ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
+	cp ${APPDIR}/LunaSysMgr.bak /usr/bin/LunaSysMgr.bak
 fi
 
 echo "Restore successful, removing any passcode"
 # Password hash format differs between LSM and LSM-CE
 if [ -e /var/luna/data/.passcode ]; then
-  echo "we found a passcode"
-  rm /var/luna/data/.passcode
-  echo "we removed a passcode"
+	echo "we found a passcode"
+	rm /var/luna/data/.passcode
+	echo "we removed a passcode"
 else
-  echo "we didn't find a passcode"
+	echo "we didn't find a passcode"
 fi
 
-mount -o remount RO /
+TWEAKSDIR=/media/cryptofs/apps/usr/palm/services/org.webosinternals.tweaks.prefs/preferences/
+
+# Remove Tweaks .json files
+cd ${TWEAKSDIR}
+rm `ls /media/cryptofs/apps/usr/palm/applications/org.webosports.lunasysmgrce/files`
 
 exit 0

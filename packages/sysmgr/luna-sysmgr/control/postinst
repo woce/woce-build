@@ -1,24 +1,39 @@
 #!/bin/sh
+PID=org.webosports.lunasysmgrce
 
-NAME=lunasysmgrce
-
-APPNAME=LunaSysMgr
-
-APPID=org.webosports.${NAME}
+# Handle execution as pmPostInstall.script
+if [ -z "$IPKG_OFFLINE_ROOT" ]; then
+IPKG_OFFLINE_ROOT=/media/cryptofs/apps
+mount -o remount,rw /
+fi
 
 APPS=/media/cryptofs/apps
 
 [ -d ${APPS} ] || { echo "Requires webOS 1.3.5 or later" ; exit 1 ; }
 
-APPDIR=${APPS}/usr/palm/applications/${APPID}
+APPDIR=${APPS}/usr/palm/applications/${PID}
 
-# Create a copy of the init script on installation
+# Replace the event.d init script with our 'replacer' modification
+file=var/palm/event.d/LunaSysMgr
+rm -f /$file
 cp ${APPDIR}/LunaSysMgr_eventd /etc/event.d/LunaSysMgr
 
-# Create copy of existing LunaSysMgr on installation.
-mv /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
+# Create copies of existing LunaSysMgr on installation.
+mkdir -p /media/internal/.someplacesafe
+cp /usr/bin/LunaSysMgr /media/internal/.someplacesafe/LunaSysMgr.bak
+cp /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
 
-# Install desired new copy for the replacer to find
+# Cleanup any files that might confuse the replacer script
+if [ -e /usr/bin/LunaSysMgr.* ]; then
+	rm -f /usr/bin/LunaSysMgr.*
+fi
+
+# Install new LSM for the replacer to find
 cp ${APPDIR}/bin/LunaSysMgr /usr/bin/LunaSysMgr.new
+
+TWEAKSDIR=/media/cryptofs/apps/usr/palm/services/org.webosinternals.tweaks.prefs/preferences/
+
+# Install Tweaks .json files
+cp ${APPDIR}/files/*.json ${TWEAKSDIR}
 
 exit 0
