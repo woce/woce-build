@@ -34,6 +34,6 @@ cp ${APPDIR}/bin/LunaSysMgr /usr/bin/LunaSysMgr.new
 TWEAKSDIR=/media/cryptofs/apps/usr/palm/services/org.webosinternals.tweaks.prefs/preferences/
 
 # Install Tweaks .json files
-cp ${APPDIR}/files/*.json ${TWEAKSDIR}
+cp ${APPDIR}/tweaks/*.json ${TWEAKSDIR}
 
 exit 0
