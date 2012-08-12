@@ -1,39 +1,188 @@
-#!/bin/sh
-PID=org.webosports.lunasysmgrce
+#!/bin/sh                                                                                       
+
+PID=
+FORCE_INSTALL=
+UPSTART_SCRIPT=%UPSTART_SCRIPT%
 
 # Handle execution as pmPostInstall.script
 if [ -z "$IPKG_OFFLINE_ROOT" ]; then
-IPKG_OFFLINE_ROOT=/media/cryptofs/apps
-mount -o remount,rw /
+    IPKG_OFFLINE_ROOT=/media/cryptofs/apps
+    mount -o remount,rw /
 fi
 
 APPS=/media/cryptofs/apps
 
 [ -d ${APPS} ] || { echo "Requires webOS 1.3.5 or later" ; exit 1 ; }
 
-APPDIR=${APPS}/usr/palm/applications/${PID}
+SRCDIR=${APPS}/usr/palm/applications/${PID}/additional_files
 
-# Replace the event.d init script with our 'replacer' modification
-file=var/palm/event.d/LunaSysMgr
-rm -f /$file
-cp ${APPDIR}/LunaSysMgr_eventd /etc/event.d/LunaSysMgr
+VERSION=`grep PRODUCT_VERSION_STRING /etc/palm-build-info | sed -e 's/.* webOS \([0-9.]*\).*/\1/'`
 
-# Create copies of existing LunaSysMgr on installation.
-mkdir -p /media/internal/.someplacesafe
-cp /usr/bin/LunaSysMgr /media/internal/.someplacesafe/LunaSysMgr.bak
-cp /usr/bin/LunaSysMgr ${APPDIR}/LunaSysMgr.bak
+cd ${SRCDIR}
 
-# Cleanup any files that might confuse the replacer script
-if [ -e /usr/bin/LunaSysMgr.* ]; then
-	rm -f /usr/bin/LunaSysMgr.*
+error=0
+
+case "${VERSION}" in
+    %COMPATIBLE_VERSIONS% )
+	echo "LunaSysMgr confirmed to be compatible with this webOS version"
+	;;
+    * )
+	echo "LunaSysMgr is not compatible with this webOS version, aborting"
+	exit 1
+	;;
+esac
+
+if [ "${FORCE_INSTALL}" = "1" ] ; then
+    echo "Forcing unconditional overwrite of all LunaSysMgr files"
+    # Remove any additional LunaSysMgr files
+    rm -rf /usr/bin/LunaSysMgr.install
 fi
 
-# Install new LSM for the replacer to find
-cp ${APPDIR}/bin/LunaSysMgr /usr/bin/LunaSysMgr.new
+if [ "${FORCE_INSTALL}" != "1" ] ; then
+  # Make sure all existing target files are in virgin condition
+    echo "Verifying no existing modifications to target files ..."
+    for file in usr/bin/LunaSysMgr ; do
+	md5sum1="`grep    -e \*./$file$ ${SRCDIR}/md5sums                   | awk '{print $1}'`"
+	md5sum2="`grep -h -e \*./$file$ /usr/lib/ipkg/info/luna-sysmgr.md5sums | awk '{print $1}'`"
+	[ ! -f "/$file" ] || \
+	    [ "`md5sum /$file | awk '{print $1}'`" = "$md5sum1" ] || \
+	    [ "`md5sum /$file | awk '{print $1}'`" = "$md5sum2" ] || \
+	    { echo "Verification failed on /$file" ; error=1 ; }
+    done
+fi
 
-TWEAKSDIR=/media/cryptofs/apps/usr/palm/services/org.webosinternals.tweaks.prefs/preferences/
+if [ "${error}" = "1" ] ; then
+    echo "Device LunaSysMgr is not in factory condition, refusing to install replacement"
+    exit 1
+fi
 
-# Install Tweaks .json files
-cp ${APPDIR}/tweaks/*.json ${TWEAKSDIR}
+# Make a backup of all LunaSysMgr file
+echo "Creating backup of existing LunaSysMgr file ..."
+tar -C / -zcf ${APPS}/usr/palm/applications/${PID}/backup.tar.gz /usr/bin/LunaSysMgr || error=1
+
+if [ "${error}" = "1" ] ; then
+    echo "Fatal error occurred, unable to create backup tarball"
+    exit 1
+fi
+
+# Verify the backup of all files that are about to be modified
+echo "Verifying backup of existing LunaSysMgr file ..."
+tar -C / -zdf ${APPS}/usr/palm/applications/${PID}/backup.tar.gz || error=1
+
+if [ "${error}" = "1" ] ; then
+    echo "Fatal error occurred, unable to verify backup tarball"
+    exit 1
+fi
+
+# Make sure all the target directories exist and are writeable
+echo "Verifying ability to write to target directories ..."
+for dir in usr/bin ; do
+    mkdir -p /$dir			|| { echo "Error creating /$dir"			; error=1 ; }
+    [ -d /$dir ]			|| { echo "Unable to create /$dir"			; error=1 ; }
+    rm -f /$dir/.webosinternals.org ]	|| { echo "Error removing /$dir/.webosinternals.org"	; error=1 ; }
+    [ ! -f /$dir/.webosinternals.org ]	|| { echo "Unable to remove /$dir/.webosinternals.org"	; error=1 ; }
+    touch /$dir/.webosinternals.org ]	|| { echo "Error touching /$dir/.webosinternals.org"	; error=1 ; }
+    [ -f /$dir/.webosinternals.org ]	|| { echo "Unable to touch /$dir/.webosinternals.org"	; error=1 ; }
+    rm -f /$dir/.webosinternals.org ]	|| { echo "Error removing /$dir/.webosinternals.org"	; error=1 ; }
+    [ ! -f /$dir/.webosinternals.org ]	|| { echo "Unable to remove /$dir/.webosinternals.org"	; error=1 ; }
+done
+
+# Make sure all the target files are readable and writeable
+echo "Verifying ability to write to target files ..."
+for file in usr/bin/LunaSysMgr ; do
+    [ -r ${SRCDIR}/$file ]		|| { echo "Unable to read from ${SRCDIR}/$file"		; error=1 ; }
+    [ ! -f /$file ] || [ -w /$file ]	|| { echo "Unable to write to /$file"			; error=1 ; }
+done
+
+# Make sure the upstart script is writeable
+if [ -n "${UPSTART_SCRIPT}" ] ; then
+    echo "Verifying ability to create upstart script ..."
+    dir=etc/event.d
+    mkdir -p /$dir			|| { echo "Error creating /$dir"			; error=1 ; }
+    rm -f /$dir/.webosinternals.org ]	|| { echo "Error removing /$dir/.webosinternals.org"	; error=1 ; }
+    [ ! -f /$dir/.webosinternals.org ]	|| { echo "Unable to remove /$dir/.webosinternals.org"	; error=1 ; }
+    touch /$dir/.webosinternals.org ]	|| { echo "Error touching /$dir/.webosinternals.org"	; error=1 ; }
+    [ -f /$dir/.webosinternals.org ]	|| { echo "Unable to touch /$dir/.webosinternals.org"	; error=1 ; }
+    rm -f /$dir/.webosinternals.org ]	|| { echo "Error removing /$dir/.webosinternals.org"	; error=1 ; }
+    [ ! -f /$dir/.webosinternals.org ]	|| { echo "Unable to remove /$dir/.webosinternals.org"	; error=1 ; }
+    file=$dir/LunaSysMgr
+    [ -r ${SRCDIR}/$file ]		|| { echo "Unable to read from ${SRCDIR}/$file"		; error=1 ; }
+    [ ! -f /$file ] || [ -w /$file ]	|| { echo "Unable to write to /$file"			; error=1 ; }
+fi
+
+# Make sure the tweaks files are writeable
+if [ -d ${SRCDIR}/tweaks ] ; then
+	echo "Verifying ability to create tweaks files ..."
+	dir=media/cryptofs/apps/usr/palm/services/org.webosinternals.tweaks.prefs/preferences
+	mkdir -p /$dir						|| { echo "Error creating /$dir"						; error=1 ; }
+	rm -f /$dir/.webosinternals.org ]	|| { echo "Error removing /$dir/.webosinternals.org"	; error=1 ; }
+	[ ! -f /$dir/.webosinternals.org ]	|| { echo "Unable to remove /$dir/.webosinternals.org"	; error=1 ; }
+	touch /$dir/.webosinternals.org ]	|| { echo "Error touching /$dir/.webosinternals.org"	; error=1 ; }
+	[ -f /$dir/.webosinternals.org ]	|| { echo "Unable to touch /$dir/.webosinternals.org"	; error=1 ; }
+	rm -f /$dir/.webosinternals.org ]	|| { echo "Error removing /$dir/.webosinternals.org"	; error=1 ; }
+	[ ! -f /$dir/.webosinternals.org ]	|| { echo "Unable to remove /$dir/.webosinternals.org"	; error=1 ; }
+fi
+
+if [ "${error}" = "1" ] ; then
+    echo "Fatal error occurred, not installing files"
+    exit 1
+fi
+
+echo "Disabling Palm diagnostics reporting ..."
+chmod -x /usr/bin/uploadd
+
+# Copy all the files to the target locations
+echo "Installing replacement LunaSysMgr file ..."
+for file in usr/bin/LunaSysMgr ; do
+    cp ${SRCDIR}/$file /$file.install	|| { echo "Error installing /$file"			; error=1 ; }
+    [ -f /$file.install ]				|| { echo "Unable to install /$file"		; error=1 ; }
+    cmp ${SRCDIR}/$file /$file.install	|| { echo "Unable to verify /$file"			; error=1 ; }
+done
+
+# Copy the upstart script to the target location
+if [ -n "${UPSTART_SCRIPT}" ] ; then
+    echo "Installing LunaSysMgr upstart script ..."
+    file=etc/event.d/LunaSysMgr
+    rm -f /$file			|| { echo "Error removing /$file"			; error=1 ; }
+    [ ! -f /$file ]			|| { echo "Unable to remove /$file"			; error=1 ; }
+    cp ${SRCDIR}/$file /$file		|| { echo "Error installing /$file"	; error=1 ; }
+    [ -f /$file ]			|| { echo "Unable to install /$file"		; error=1 ; }
+    cmp ${SRCDIR}/$file /$file		|| { echo "Unable to verify /$file"	; error=1 ; }
+fi
+
+# Copy the tweaks files to the target location
+if [ -d ${SRCDIR}/tweaks ] ; then
+	echo "Installing Tweaks files ..."
+	dir=media/cryptofs/apps/usr/palm/services/org.webosinternals.tweaks.prefs/preferences
+	for file in `cd tweaks ; find . -type f -print` ; do
+		rm -f /$dir/$file						|| { echo "Error removing /$dir/$file"		; error=1 ; }
+		[ ! -f /$dir/$file ]					|| { echo "Unable to remove /$dir/$file"	; error=1 ; }
+		cp ${SRCDIR}/tweaks/$file /$dir/$file	|| { echo "Error installing /$dir/$file"	; error=1 ; }
+		[ -f /$dir/$file ]						|| { echo "Unable to install /$dir/$file"	; error=1 ; }
+		cmp ${SRCDIR}/tweaks/$file /$dir/$file	|| { echo "Unable to verify /$dir/$file"	; error=1 ; }
+	done
+fi
+
+if [ "${error}" = "1" ] ; then
+    echo "Fatal error occurred, restoring original files"
+    # Remove any additional LunaSysMgr binaries
+    rm -f /usr/bin/LunaSysMgr.install
+    tar -C / -zxf ${APPS}/usr/palm/applications/${PID}/backup.tar.gz || \
+	{ echo "Fatal error occurred, unable to extract tarball" ; exit 1 ; }
+    tar -C / -zdf ${APPS}/usr/palm/applications/${PID}/backup.tar.gz || \
+	{ echo "Fatal error occurred, unable to verify tarball extraction" ; exit 1 ; }
+    echo "Original files restored, we have normality, I repeat we have normality"
+    exit 1
+fi
+
+echo "Replacement LunaSysMgr successfully installed"
+
+if [ "${FORCE_INSTALL}" = "1" ] ; then
+    echo "Removing WebOS Ports LunaSysMgr package"
+    /usr/bin/ipkg -o ${APPS} remove org.webosports.palm-lunasysmgr
+    /usr/bin/ipkg -o ${APPS} remove org.webosports.uberlunah
+    rm -rf ${APPS}/usr/palm/applications/org.webosports.palm-lunasysmgr
+    rm -rf ${APPS}/usr/palm/applications/org.webosports.uberlunah
+fi
 
 exit 0
