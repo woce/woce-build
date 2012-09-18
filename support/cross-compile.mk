@@ -15,4 +15,8 @@ CCENV += OBJCOPY_TMP=$(TCTOOLPREFIX)objcopy
 CCENV += STRIP_TMP=$(TCTOOLPREFIX)strip
 CCENV += CFLAGS_TMP="-O2 -marm -march=armv7-a -ftree-vectorize -mfpu=neon -mfloat-abi=softfp -mtune=cortex-a8"
 CCENV += CXXFLAGS_TMP="-O2 -marm -march=armv7-a -ftree-vectorize -mfpu=neon -mfloat-abi=softfp -mtune=cortex-a8"
-CCENV += MACHINE=topaz
+ifdef MACHINE
+	CCENV += MACHINE=$(MACHINE)
+else
+	CCENV += MACHINE=topaz
+endif

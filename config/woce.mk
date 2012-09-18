@@ -25,3 +25,9 @@ QT4_PATCH_NAME := qt4-patch
 QT4_PATCH_VERSION := $(QT4_VERSION)
 QT4_PATCH_URL := http://downloads.help.palm.com/opensource/3.0.5/qt-$(QT4_VERSION).patch.gz
 QT4_PATCH_DLTYPE := GZ
+
+# Ignore this for now...
+WEBKIT_NAME := QTWebKit
+WEBKIT_VERSION := 5.0.0
+WEBKIT_URL := /mnt/hgfs/webOS/isis-CE/WebKit/ 
+WEBKIT_DLTYPE := DIR

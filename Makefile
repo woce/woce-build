@@ -6,7 +6,7 @@ WOCE_ARCH=armv7
 LEVEL = .
 
 .PHONY: woce-toolchain woce-headers clobber
-.PHONY: qt4 luna-sysmgr
+.PHONY: qt4 luna-sysmgr webkit-depends webkit
 .PHONY: default woce webos-ports custom
 
 include $(LEVEL)/Makefile.common
@@ -15,6 +15,7 @@ include $(LEVEL)/Makefile.common
 # For now, just list packages to be built here, in a working order.
 build:: linkdirs
 	$(MAKE) woce-toolchain woce-headers
+	$(MAKE) webkit
 	$(MAKE) luna-sysmgr
 	@echo
 	@echo "Build Success!  New LunaSysMgr available at:"
@@ -30,6 +31,17 @@ qt4:
 
 luna-sysmgr: qt4
 	$(MAKE) -C packages/sysmgr/luna-sysmgr
+
+webkit-depends: zlib qt4
+
+# This is a mess... Need to clean it up...
+zlib:
+	scripts/get_zlib.sh $(LEVEL)
+
+webkit: webkit-depends
+	cd packages/isis/ && ./build.sh
+#	./packages/isis/isis-project/build.sh
+#	$(MAKE) -C packages/qtwebkit/
 
 # Download and extract the toolchain
 woce-toolchain: toolchain/$(WOCE_TOOLCHAIN)/.unpacked
