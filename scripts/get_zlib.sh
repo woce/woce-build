@@ -29,5 +29,7 @@ make
 cp zlib.h $CURRENTDIR/staging/armv7/usr/include/
 cp zconf.h $CURRENTDIR/staging/armv7/usr/include/
 
+touch .zlib
+
 popd
 
