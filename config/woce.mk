@@ -27,7 +27,7 @@ QT4_PATCH_URL := http://downloads.help.palm.com/opensource/3.0.5/qt-$(QT4_VERSIO
 QT4_PATCH_DLTYPE := GZ
 
 # Ignore this for now...
-WEBKIT_NAME := QTWebKit
-WEBKIT_VERSION := 5.0.0
-WEBKIT_URL := /mnt/hgfs/webOS/isis-CE/WebKit/ 
-WEBKIT_DLTYPE := DIR
+ISIS_NAME := Isis
+ISIS_VERSION := master 
+ISIS_URL := https://github.com/openwebos-ports/IsisCE.git 
+ISIS_DLTYPE := GIT
