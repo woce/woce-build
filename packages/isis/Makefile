@@ -23,7 +23,7 @@ LICENSE  = Various
 HEADLESSAPP_VERSION = 0.2.0
 
 
-LEVEL=../../..
+LEVEL=../..
 
 # Default goal is to build LunaSysMgr
 # There's a beta 'package' target as well that
