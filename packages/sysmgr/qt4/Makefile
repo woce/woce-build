@@ -66,6 +66,9 @@ build/armv7/.built: build/.unpacked
 		 install_mkspecs \
 		 install_qmake \
 		 sub-moc-install_subtargets-ordered \
-		 sub-uic-install_subtargets-ordered
+		 sub-uic-install_subtargets-ordered \
+                 sub-network-install_subtargets-ordered \
+                 sub-sql-install_subtargets-ordered \
+                 sub-testlib-install_subtargets-ordered
 	touch $@
 

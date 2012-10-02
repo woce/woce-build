@@ -36,7 +36,7 @@ include $(LEVEL)/support/package.mk
 include $(LEVEL)/support/headlessapp.mk
 
 QTPATH := $(shell readlink -f $(LEVEL)/packages/sysmgr/qt4/build/armv7)
-QMAKE := $(QTPATH)/usr/bin/qmake-palm
+QMAKE := $(QTPATH)/bin/qmake-palm
 LUNA_STAGING := $(STAGING_DIR)
 QMAKE_CXX := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
 QMAKE_CC := $(TCDIR)/bin/arm-none-linux-gnueabi-gcc
@@ -46,7 +46,7 @@ QMAKE_STRIP := $(TCDIR)/bin/arm-none-linux-gnueabi-strip
 QMAKE_LINK := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
 
 # TODO: Move into support/cross-compile.mk
-ISIS_ENV := QTDIR=$(shell readlink -m $(LEVEL)/packages/sysmgr/qt4/build/armv7)
+ISIS_ENV := QTDIR=$(QTPATH)
 ISIS_ENV += QMAKE=$(QTPATH)/bin/qmake-palm
 ISIS_ENV += INCLUDEPATH=$(LUNA_STAGING)/usr/include/glib-2.0/
 ISIS_ENV += STAGING_INCDIR=$(LUNA_STAGING)/usr/include
@@ -84,6 +84,8 @@ build/$(CONFIG)/.built-${VERSION}: build/$(CONFIG)/.config-${VERSION}
 	--qmake="$(QMAKE)" \
 	--makeargs="-j$(PROCCOUNT)" \
 	--qmakearg="-spec qws/linux-armv6-g++" \
+	--qmakearg="QTPATH=$(QTPATH)" \
+	--qmakearg="QTDIR=$(QTPATH)" \
 	--qmakearg="QMAKE_CC=$(QMAKE_CC)" \
 	--qmakearg="QMAKE_CXX=$(QMAKE_CXX)" \
 	--qmakearg="QMAKE_AR='$(QMAKE_AR) -r'" \
