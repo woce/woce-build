@@ -37,6 +37,7 @@ webkit-depends: downloads/.zlib qt4
 # This is a mess... Need to clean it up...
 downloads/.zlib:
 	scripts/get_zlib.sh $(LEVEL)
+	touch $@
 
 webkit: webkit-depends
 	$(MAKE) -C packages/isis

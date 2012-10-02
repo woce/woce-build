@@ -56,7 +56,7 @@ ISIS_ENV += WEBKITOUTPUTDIR="WebKitBuild/isis-armv7"
 
 .PHONY: build unpack patch package
 package:: ipkgs/${APP_ID}-$(CONFIG)_${VERSION}_armv7.ipk
-build:: build/$(CONFIG)/armv7-stage/.built-${VERSION}
+build:: build/$(CONFIG)/.built-${VERSION}
 unpack: build/$(CONFIG)/.unpacked
 
 $(call DL,ISIS)
@@ -68,10 +68,10 @@ build/$(CONFIG)/.unpacked: $(ISIS_DL)
 	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
 	touch $@
 
-build/$(CONFIG)/armv7-stage/.config-${VERSION}: build/$(CONFIG)/.unpacked
+build/$(CONFIG)/.config-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
-build/$(CONFIG)/armv7-stage/.built-${VERSION}: build/$(CONFIG)/armv7-stage/.config-${VERSION}
+build/$(CONFIG)/.built-${VERSION}: build/$(CONFIG)/.config-${VERSION}
 	cd build/$(CONFIG)/src && \
 	$(ISIS_ENV) ./WebKit/Tools/Scripts/build-webkit --qt \
 	--release \
@@ -88,7 +88,7 @@ build/$(CONFIG)/armv7-stage/.built-${VERSION}: build/$(CONFIG)/armv7-stage/.conf
 	--qmakearg="QMAKE_LINK=$(QMAKE_LINK)" \
 	--qmakearg="QMAKE_RANLIB=$(QMAKE_RANLIB)" \
 	--qmakearg="QMAKE_STRIP=$(QMAKE_STRIP)" \
-	--qmakearg="STAGING_INCDIR=$(STAGING_INCDIR)" \
+	--qmakearg="STAGING_INCDIR=$(STAGING_DIR)/usr/include" \
 	--qmakearg="DEFINES+=XP_UNIX" \
 	--qmakearg="DEFINES+=XP_WEBOS" \
 	--qmakearg="DEFINES+=PALM_DEVICE" \
@@ -98,7 +98,7 @@ build/$(CONFIG)/armv7-stage/.built-${VERSION}: build/$(CONFIG)/armv7-stage/.conf
 
 ### Packaging magic
 ## TODO: When we revisit packaging, fix this up to do the 'right' thing regarding CONFIG
-build/$(CONFIG)/.built-${VERSION}: build/$(CONFIG)/armv7.built-${VERSION}
+build/$(CONFIG)/.built-${VERSION}: build/$(CONFIG)/.built-${VERSION}
 
 ### Headless app packaging fun
 build/$(CONFIG)/%.built-${VERSION}: build/$(CONFIG)/%-stage/.built-${VERSION} ${DL_DIR}/headlessapp-${HEADLESSAPP_VERSION}.tar.gz
