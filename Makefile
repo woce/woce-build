@@ -39,9 +39,7 @@ downloads/.zlib:
 	scripts/get_zlib.sh $(LEVEL)
 
 webkit: webkit-depends
-	cd packages/isis/ && ./build.sh
-#	./packages/isis/isis-project/build.sh
-#	$(MAKE) -C packages/qtwebkit/
+	$(MAKE) -C packages/isis
 
 # Download and extract the toolchain
 woce-toolchain: toolchain/$(WOCE_TOOLCHAIN)/.unpacked
