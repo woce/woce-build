@@ -5,6 +5,11 @@ STAGING_DIR = $(shell readlink -m $(LEVEL)/staging/armv7)
 TCDIR = $(shell readlink -m $(LEVEL)/toolchain/arm-2009q1)
 TCTOOLPREFIX = $(TCDIR)/bin/arm-none-linux-gnueabi-
 
+# Used for building WebKit. This could be determined at runtime, but WebKit is a HOG!
+PROCCOUNT := 2
+
+# TODO: Move ISIS_ENV into here.
+
 CCENV := PATH=$(TCDIR)/bin:$(PATH)
 CCENV += STAGING_LIBDIR=$(STAGING_DIR)/usr/lib
 CCENV += STAGING_INCDIR=$(STAGING_DIR)/usr/include

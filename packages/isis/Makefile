@@ -37,6 +37,22 @@ include $(LEVEL)/support/headlessapp.mk
 
 QTPATH := $(shell readlink -f $(LEVEL)/packages/sysmgr/qt4/build/armv7)
 QMAKE := $(QTPATH)/bin/qmake-palm
+LUNA_STAGING := $(STAGING_DIR)
+QMAKE_CXX := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
+QMAKE_CC := $(TCDIR)/bin/arm-none-linux-gnueabi-gcc
+QMAKE_AR := $(TCDIR)/bin/arm-none-linux-gnueabi-ar
+QMAKE_RANLIB := $(TCDIR)/bin/arm-none-linux-gnueabi-ranlib
+QMAKE_STRIP := $(TCDIR)/bin/arm-none-linux-gnueabi-strip
+QMAKE_LINK := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
+
+# TODO: Move into support/cross-compile.mk
+ISIS_ENV := QTDIR=$(shell readlink -m $(LEVEL)/packages/sysmgr/qt4/build/armv7)
+ISIS_ENV += STAGING_INCDIR=$(LUNA_STAGING)/usr/include
+ISIS_ENV += STAGING_LIBDIR=$(LUNA_STAGING)/usr/lib
+ISIS_ENV += QTPATH=$(QTPATH)
+ISIS_ENV += LD_LIBRARY_PATH=$(QTPATH)/lib:$LD_LIBRARY_PATH
+ISIS_ENV += QMAKEPATH=$(shell readlink -m $(LEVEL)/packages/isis/src/WebKit/Tools/qmake)
+ISIS_ENV += WEBKITOUTPUTDIR="WebKitBuild/isis-armv7"
 
 .PHONY: build unpack patch package
 package:: ipkgs/${APP_ID}-$(CONFIG)_${VERSION}_armv7.ipk
@@ -56,7 +72,29 @@ build/$(CONFIG)/armv7-stage/.config-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
 build/$(CONFIG)/armv7-stage/.built-${VERSION}: build/$(CONFIG)/armv7-stage/.config-${VERSION}
-	cd build/$(CONFIG)/src && ./build.sh
+	cd build/$(CONFIG)/src && \
+	$(ISIS_ENV) ./WebKit/Tools/Scripts/build-webkit --qt \
+	--release \
+	--video \
+	--fullscreen-api \
+	--no-webgl \
+	--no-webkit2 \
+	--qmake="$(QMAKE)" \
+	--makeargs="-j$(PROCOUNT)" \
+	--qmakearg="-spec qws/linux-armv6-g++" \
+	--qmakearg="QMAKE_CC=$(QMAKE_CC)" \
+	--qmakearg="QMAKE_CXX=$(QMAKE_CXX)" \
+	--qmakearg="QMAKE_AR='$(QMAKE_AR) -r'" \
+	--qmakearg="QMAKE_LINK=$(QMAKE_LINK)" \
+	--qmakearg="QMAKE_RANLIB=$(QMAKE_RANLIB)" \
+	--qmakearg="QMAKE_STRIP=$(QMAKE_STRIP)" \
+	--qmakearg="STAGING_INCDIR=$(STAGING_INCDIR)" \
+	--qmakearg="DEFINES+=XP_UNIX" \
+	--qmakearg="DEFINES+=XP_WEBOS" \
+	--qmakearg="DEFINES+=PALM_DEVICE" \
+	--qmakearg="DEFINES+=QT_WEBOS" \
+	--qmakearg="DEFINES+=WTF_USE_ZLIB=1"
+	touch $@
 
 ### Packaging magic
 ## TODO: When we revisit packaging, fix this up to do the 'right' thing regarding CONFIG
