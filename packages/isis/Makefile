@@ -36,7 +36,7 @@ include $(LEVEL)/support/package.mk
 include $(LEVEL)/support/headlessapp.mk
 
 QTPATH := $(shell readlink -f $(LEVEL)/packages/sysmgr/qt4/build/armv7)
-QMAKE := $(QTPATH)/bin/qmake-palm
+QMAKE := $(QTPATH)/usr/bin/qmake-palm
 LUNA_STAGING := $(STAGING_DIR)
 QMAKE_CXX := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
 QMAKE_CC := $(TCDIR)/bin/arm-none-linux-gnueabi-gcc
@@ -47,11 +47,13 @@ QMAKE_LINK := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
 
 # TODO: Move into support/cross-compile.mk
 ISIS_ENV := QTDIR=$(shell readlink -m $(LEVEL)/packages/sysmgr/qt4/build/armv7)
+ISIS_ENV += QMAKE=$(QTPATH)/bin/qmake-palm
+ISIS_ENV += INCLUDEPATH=$(LUNA_STAGING)/usr/include/glib-2.0/
 ISIS_ENV += STAGING_INCDIR=$(LUNA_STAGING)/usr/include
 ISIS_ENV += STAGING_LIBDIR=$(LUNA_STAGING)/usr/lib
 ISIS_ENV += QTPATH=$(QTPATH)
-ISIS_ENV += LD_LIBRARY_PATH=$(QTPATH)/lib:$LD_LIBRARY_PATH
-ISIS_ENV += QMAKEPATH=$(shell readlink -m $(LEVEL)/packages/isis/src/WebKit/Tools/qmake)
+ISIS_ENV += LD_LIBRARY_PATH=$(QTPATH)/lib:$(LUNA_STAGING)/usr/lib
+ISIS_ENV += QMAKEPATH=$(shell readlink -m $(LEVEL)/packages/isis/build/$(CONFIG)/src/WebKit/Tools/qmake)
 ISIS_ENV += WEBKITOUTPUTDIR="WebKitBuild/isis-armv7"
 
 .PHONY: build unpack patch package
@@ -80,7 +82,7 @@ build/$(CONFIG)/.built-${VERSION}: build/$(CONFIG)/.config-${VERSION}
 	--no-webgl \
 	--no-webkit2 \
 	--qmake="$(QMAKE)" \
-	--makeargs="-j$(PROCOUNT)" \
+	--makeargs="-j$(PROCCOUNT)" \
 	--qmakearg="-spec qws/linux-armv6-g++" \
 	--qmakearg="QMAKE_CC=$(QMAKE_CC)" \
 	--qmakearg="QMAKE_CXX=$(QMAKE_CXX)" \
