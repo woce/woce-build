@@ -58,7 +58,7 @@ ISIS_ENV += WEBKITOUTPUTDIR="WebKitBuild/isis-armv7"
 
 .PHONY: build unpack patch package
 package:: ipkgs/${APP_ID}-$(CONFIG)_${VERSION}_armv7.ipk
-build:: build/$(CONFIG)/.built-${VERSION}
+build:: build/$(CONFIG)/.built-WebKit-${VERSION}
 unpack: build/$(CONFIG)/.unpacked
 
 $(call DL,ISIS)
@@ -70,10 +70,10 @@ build/$(CONFIG)/.unpacked: $(ISIS_DL)
 	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
 	touch $@
 
-build/$(CONFIG)/.config-${VERSION}: build/$(CONFIG)/.unpacked
+build/$(CONFIG)/.config-WebKit-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
-build/$(CONFIG)/.built-${VERSION}: build/$(CONFIG)/.config-${VERSION}
+build/$(CONFIG)/.built-WebKit-${VERSION}: build/$(CONFIG)/.config-WebKit-${VERSION}
 	cd build/$(CONFIG)/src && \
 	$(ISIS_ENV) ./WebKit/Tools/Scripts/build-webkit --qt \
 	--release \
