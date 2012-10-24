@@ -11,11 +11,11 @@ build:: build/$(CONFIG)/.built-pbjson-${VERSION}
 unpack: build/$(CONFIG)/.unpacked
 
 ### Unpack the software and build it
-build/$(CONFIG)/.unpacked: $(ISIS_DL)
-	-rm -rf build/$(CONFIG)
-	mkdir -p build/$(CONFIG)/src
-	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
-	touch $@
+#build/$(CONFIG)/.unpacked: $(ISIS_DL)
+#	-rm -rf build/$(CONFIG)
+#	mkdir -p build/$(CONFIG)/src
+#	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
+#	touch $@
 
 build/$(CONFIG)/.config-pbjson-${VERSION}: build/$(CONFIG)/.unpacked
 	cp -R build/$(CONFIG)/src/cmake-modules-webos/webOS build/$(CONFIG)/src/libpbnjson/

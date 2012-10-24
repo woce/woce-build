@@ -1,0 +1,26 @@
+VERSION  = 0.0.1
+
+LEVEL=../..
+
+build::
+
+include $(LEVEL)/Makefile.common
+
+.PHONY: build unpack
+build:: build/$(CONFIG)/.built-npapi-${VERSION}
+unpack: build/$(CONFIG)/.unpacked
+
+### Unpack the software and build it
+#build/$(CONFIG)/.unpacked: $(ISIS_DL)
+#	-rm -rf build/$(CONFIG)
+#	mkdir -p build/$(CONFIG)/src
+#	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
+#	touch $@
+
+build/$(CONFIG)/.config-npapi-${VERSION}: build/$(CONFIG)/.unpacked
+	touch $@
+
+build/$(CONFIG)/.built-npapi-${VERSION}: build/$(CONFIG)/.config-npapi-${VERSION}
+	HOME=$(STAGING_DIR) make -C build/$(CONFIG)/src/npapi-headers/
+	touch $@
+

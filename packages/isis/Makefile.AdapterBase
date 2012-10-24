@@ -1,0 +1,28 @@
+VERSION  = 0.0.1
+
+LEVEL=../..
+
+build::
+
+include $(LEVEL)/Makefile.common
+
+.PHONY: build unpack
+build:: build/$(CONFIG)/.built-AdapterBase-${VERSION}
+unpack: build/$(CONFIG)/.unpacked
+
+### Unpack the software and build it
+#build/$(CONFIG)/.unpacked: $(ISIS_DL)
+#	-rm -rf build/$(CONFIG)
+#	mkdir -p build/$(CONFIG)/src
+#	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
+#	touch $@
+
+INCLUDE_DIRS := -I$(STAGING_DIR)/ISIS_OUT/include/ -I$(STAGING_DIR)/usr/include/ -I$(STAGING_DIR)/usr/include/glib-2.0/
+
+build/$(CONFIG)/.config-AdapterBase-${VERSION}: build/$(CONFIG)/.unpacked
+	touch $@
+
+build/$(CONFIG)/.built-AdapterBase-${VERSION}: build/$(CONFIG)/.config-AdapterBase-${VERSION}
+	make -C build/$(CONFIG)/src/AdapterBase/ INCLUDES="$(INCLUDE_DIRS)" PACKAGE_NAME=AdapterBase LUNA_STAGING=$(STAGING_DIR)
+	touch $@
+
