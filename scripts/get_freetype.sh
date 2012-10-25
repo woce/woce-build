@@ -22,7 +22,7 @@ patch -p1 < ../fix-configure.patch
 patch -p1 < ../libtool-tag.patch
 patch -p1 < ../files/no-hardcode.patch
 
-cp include/* $CURRENTDIR/staging/armv7/usr/include/
+cp -R include/* $CURRENTDIR/staging/armv7/usr/include/
 
 touch .freetype
 

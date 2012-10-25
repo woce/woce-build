@@ -19,14 +19,15 @@ unpack: build/$(CONFIG)/.unpacked
 
 INCLUDE_DIRS := -I$(STAGING_DIR)/ISIS_OUT/include/ -I$(STAGING_DIR)/usr/include/ -I$(STAGING_DIR)/usr/include/glib-2.0/
 QTPATH := $(shell readlink -f $(LEVEL)/packages/sysmgr/qt4/build/armv7)
-QMAKE := $(QTPATH)/bin/qmake-palm
-
 QMAKE_CXX := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
 QMAKE_CC := $(TCDIR)/bin/arm-none-linux-gnueabi-gcc
 QMAKE_AR := $(TCDIR)/bin/arm-none-linux-gnueabi-ar
 QMAKE_RANLIB := $(TCDIR)/bin/arm-none-linux-gnueabi-ranlib
 QMAKE_STRIP := $(TCDIR)/bin/arm-none-linux-gnueabi-strip
 QMAKE_LINK := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
+
+QMAKE := " $(QTPATH)/bin/qmake-palm QTDIR=$(QTPATH) QMAKE_CXX=$(QMAKE_CXX) QMAKE_CC=$(QMAKE_CC) QMAKE_AR='$(QMAKE_AR) -r' QMAKE_RANLIB=$(QMAKE_RANLIB) QMAKE_STRIP=$(QMAKE_STRIP) QMAKE_LINK=$(QMAKE_LINK) STAGING_INCDIR=$(STAGING_DIR)/usr/include"
+
 
 
 build/$(CONFIG)/.config-WebKitSupplemental-${VERSION}: build/$(CONFIG)/.unpacked
