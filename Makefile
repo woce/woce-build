@@ -32,11 +32,15 @@ qt4:
 luna-sysmgr: qt4
 	$(MAKE) -C packages/sysmgr/luna-sysmgr
 
-webkit-depends: downloads/.zlib qt4
+webkit-depends: downloads/.zlib downloads/.freetype qt4
 
 # This is a mess... Need to clean it up...
 downloads/.zlib:
 	scripts/get_zlib.sh $(LEVEL)
+	touch $@
+
+downloads/.freetype:
+	scripts/get_freetype.sh $(LEVEL)
 	touch $@
 
 webkit: webkit-depends
