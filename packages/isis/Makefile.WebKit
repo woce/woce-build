@@ -56,10 +56,11 @@ ISIS_ENV += LD_LIBRARY_PATH=$(QTPATH)/lib:$(LUNA_STAGING)/usr/lib
 ISIS_ENV += QMAKEPATH=$(shell readlink -m $(LEVEL)/packages/isis/build/$(CONFIG)/src/WebKit/Tools/qmake)
 ISIS_ENV += WEBKITOUTPUTDIR="WebKitBuild/isis-armv7"
 
-.PHONY: build unpack patch package
+.PHONY: build unpack patch package 
 package:: ipkgs/${APP_ID}-$(CONFIG)_${VERSION}_armv7.ipk
 build:: build/$(CONFIG)/.built-WebKit-${VERSION}
 unpack: build/$(CONFIG)/.unpacked
+
 
 $(call DL,ISIS)
 
@@ -97,8 +98,11 @@ build/$(CONFIG)/.built-WebKit-${VERSION}: build/$(CONFIG)/.config-WebKit-${VERSI
 	--qmakearg="DEFINES+=XP_WEBOS" \
 	--qmakearg="DEFINES+=PALM_DEVICE" \
 	--qmakearg="DEFINES+=QT_WEBOS" \
-	--qmakearg="DEFINES+=WTF_USE_ZLIB=1"
+	--qmakearg="DEFINES+=WTF_USE_ZLIB=1" \
+	--install-headers="$(STAGING_DIR)/usr/include/" \
+	--install-libs="$(STAGING_DIR)/usr/lib/"
 	touch $@
+
 
 ### Packaging magic
 ## TODO: When we revisit packaging, fix this up to do the 'right' thing regarding CONFIG

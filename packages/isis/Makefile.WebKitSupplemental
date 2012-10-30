@@ -17,7 +17,7 @@ unpack: build/$(CONFIG)/.unpacked
 #	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
 #	touch $@
 
-INCLUDE_DIRS := -I$(STAGING_DIR)/ISIS_OUT/include/ -I$(STAGING_DIR)/usr/include/ -I$(STAGING_DIR)/usr/include/glib-2.0/
+INCLUDE_DIRS := -I$(STAGING_DIR)/ISIS_OUT/include/ -I$(STAGING_DIR)/usr/include/ -I$(STAGING_DIR)/usr/include/glib-2.0/ -I$(STAGING_DIR)/usr/include/QtWebKit/
 QTPATH := $(shell readlink -f $(LEVEL)/packages/sysmgr/qt4/build/armv7)
 QMAKE_CXX := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
 QMAKE_CC := $(TCDIR)/bin/arm-none-linux-gnueabi-gcc
