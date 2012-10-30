@@ -43,8 +43,35 @@ downloads/.freetype:
 	scripts/get_freetype.sh $(LEVEL)
 	touch $@
 
+adapterbase:
+	$(MAKE) -C packages/isis -f Makefile.AdapterBase
+
+npapi:
+	$(MAKE) -C packages/isis -f Makefile.npapi
+
+pbnjson:
+	$(MAKE) -C packages/isis -f Makefile.pbnjson
+
+browseradapter: npapi pbnjson adapterbase
+	$(MAKE) -C packages/isis -f Makefile.BrowserAdapter
+
+browserserver: browseradapter webkitsupplemental
+	$(MAKE) -C packages/isis -f Makefile.BrowserServer
+
 webkit: webkit-depends
-	$(MAKE) -C packages/isis
+	$(MAKE) -C packages/isis -f Makefile.WebKit
+
+webkitsupplemental: webkit
+	$(MAKE) -C packages/isis -f Makefile.WebKitSupplemental
+
+enyo1:
+	echo "Need to do something about enyo1"
+
+webview: enyo1
+	echo "Need to do something about webview"
+
+isis: browseradapter browserserver webview
+	echo "We'll need to run a palm-package"
 
 # Download and extract the toolchain
 woce-toolchain: toolchain/$(WOCE_TOOLCHAIN)/.unpacked
