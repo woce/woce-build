@@ -15,7 +15,7 @@ include $(LEVEL)/Makefile.common
 # For now, just list packages to be built here, in a working order.
 build:: linkdirs
 	$(MAKE) woce-toolchain woce-headers
-	$(MAKE) webkit
+	$(MAKE) webkitsupplemental
 	$(MAKE) luna-sysmgr
 	@echo
 	@echo "Build Success!  New LunaSysMgr available at:"

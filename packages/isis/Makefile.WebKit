@@ -45,6 +45,8 @@ QMAKE_RANLIB := $(TCDIR)/bin/arm-none-linux-gnueabi-ranlib
 QMAKE_STRIP := $(TCDIR)/bin/arm-none-linux-gnueabi-strip
 QMAKE_LINK := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
 
+WEBKITOUTPUTDIR := "WebKitBuild/isis-armv7"
+
 # TODO: Move into support/cross-compile.mk
 ISIS_ENV := QTDIR=$(QTPATH)
 ISIS_ENV += QMAKE=$(QTPATH)/bin/qmake-palm
@@ -54,7 +56,7 @@ ISIS_ENV += STAGING_LIBDIR=$(LUNA_STAGING)/usr/lib
 ISIS_ENV += QTPATH=$(QTPATH)
 ISIS_ENV += LD_LIBRARY_PATH=$(QTPATH)/lib:$(LUNA_STAGING)/usr/lib
 ISIS_ENV += QMAKEPATH=$(shell readlink -m $(LEVEL)/packages/isis/build/$(CONFIG)/src/WebKit/Tools/qmake)
-ISIS_ENV += WEBKITOUTPUTDIR="WebKitBuild/isis-armv7"
+ISIS_ENV += WEBKITOUTPUTDIR=$(WEBKITOUTPUTDIR)
 
 .PHONY: build unpack patch package 
 package:: ipkgs/${APP_ID}-$(CONFIG)_${VERSION}_armv7.ipk
@@ -101,6 +103,7 @@ build/$(CONFIG)/.built-WebKit-${VERSION}: build/$(CONFIG)/.config-WebKit-${VERSI
 	--qmakearg="DEFINES+=WTF_USE_ZLIB=1" \
 	--install-headers="$(STAGING_DIR)/usr/include/" \
 	--install-libs="$(STAGING_DIR)/usr/lib/"
+	make -C build/$(CONFIG)/src/WebKit/$(WEBKITOUTPUTDIR)/Release/ install
 	touch $@
 
 
