@@ -1,0 +1,32 @@
+VERSION  = 0.0.1
+
+LEVEL=../..
+
+build::
+
+include $(LEVEL)/Makefile.common
+
+.PHONY: build unpack
+build:: build/$(CONFIG)/.built-BrowserAdapter-${VERSION}
+unpack: build/$(CONFIG)/.unpacked
+
+### Unpack the software and build it
+#build/$(CONFIG)/.unpacked: $(ISIS_DL)
+#	-rm -rf build/$(CONFIG)
+#	mkdir -p build/$(CONFIG)/src
+#	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
+#	touch $@
+
+TARGET_ARCH=armv7
+STAGING_INC_DIR=$(STAGING_DIR)/usr/include/
+STAGING_LIB_DIR=$(STAGING_DIR)/usr/lib/
+QT_INSTALL_PREFIX=$(shell readlink -f $(LEVEL)/packages/sysmgr/qt4/build/armv7)
+INSTALL_DIR=$(STAGING_DIR)
+
+build/$(CONFIG)/.config-BrowserAdapter-${VERSION}: build/$(CONFIG)/.unpacked
+	touch $@
+
+build/$(CONFIG)/.built-BrowserAdapter-${VERSION}: build/$(CONFIG)/.config-BrowserAdapter-${VERSION}
+	make -C build/$(CONFIG)/src/BrowserAdapter/ TARGET_ARCH=$(TARGET_ARCH) STAGING_INC_DIR=$(STAGING_INC_DIR) STAGING_LIB_DIR=$(STAGING_LIB_DIR) QT_INSTALL_PREFIX=$(QT_INSTALL_PREFIX) INSTALL_DIR=$(INSTALL_DIR)
+	touch $@
+
