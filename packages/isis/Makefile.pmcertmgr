@@ -17,6 +17,11 @@ unpack: build/$(CONFIG)/.unpacked
 #	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
 #	touch $@
 
+CMAKE_WEBOS = $(shell readlink -f $(LEVEL)/packages/isis/build/$(CONFIG)/src/cmake-modules-webos/)
+
+CC=$(TCDIR)/bin/arm-none-linux-gnueabi-gcc
+CXX=$(TCDIR)/bin/arm-none-linux-gnueabi-g++
+
 build/$(CONFIG)/.config-pmcertificatemgr-${VERSION}: build/$(CONFIG)/.unpacked
 	cp -R build/$(CONFIG)/src/cmake-modules-webos/webOS build/$(CONFIG)/src/pmcertificatemgr/
 	touch $@
@@ -24,7 +29,7 @@ build/$(CONFIG)/.config-pmcertificatemgr-${VERSION}: build/$(CONFIG)/.unpacked
 build/$(CONFIG)/.built-pmcertificatemgr-${VERSION}: build/$(CONFIG)/.config-pmcertificatemgr-${VERSION}
 	mkdir build/$(CONFIG)/src/pmcertificatemgr/BUILD && \
 	cd build/$(CONFIG)/src/pmcertificatemgr/BUILD && \
-	cmake -DWEBOS_INSTALL_ROOT:PATH=$(STAGING_DIR) .. && \
+	CC=$(CC) CXX=$(CXX) cmake -DCMAKE_MODULE_PATH:PATH=$(CMAKE_WEBOS) -DWEBOS_INSTALL_ROOT:PATH=$(STAGING_DIR) .. && \
 	make && \
 	make install
 	touch $@
