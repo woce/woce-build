@@ -25,11 +25,10 @@ CC=$(TCDIR)/bin/arm-none-linux-gnueabi-gcc
 CXX=$(TCDIR)/bin/arm-none-linux-gnueabi-g++
 
 build/$(CONFIG)/.config-pbjson-${VERSION}: build/$(CONFIG)/.unpacked
-	cp -R build/$(CONFIG)/src/cmake-modules-webos/webOS build/$(CONFIG)/src/libpbnjson/
 	touch $@
 
 build/$(CONFIG)/.built-pbjson-${VERSION}: build/$(CONFIG)/.config-pbjson-${VERSION}
-	mkdir build/$(CONFIG)/src/libpbnjson/BUILD && \
+	mkdir -p build/$(CONFIG)/src/libpbnjson/BUILD && \
 	cd build/$(CONFIG)/src/libpbnjson/BUILD && \
 	CC=$(CC) CXX=$(CXX) cmake -DCMAKE_INCLUDE_PATH:PATH=$(CMAKE_INCLUDES) -DCMAKE_LIBRARY_PATH:PATH=$(CMAKE_LIBS) -DCMAKE_MODULE_PATH:PATH=$(CMAKE_WEBOS) -DWEBOS_INSTALL_ROOT:PATH=$(STAGING_DIR) .. && \
 	make && \

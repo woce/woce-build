@@ -20,18 +20,21 @@ unpack: build/$(CONFIG)/.unpacked
 CMAKE_WEBOS = $(shell readlink -f $(LEVEL)/packages/isis/build/$(CONFIG)/src/cmake-modules-webos/)
 CMAKE_INCLUDES = $(STAGING_DIR)/usr/include/
 CMAKE_LIBS = $(STAGING_DIR)/usr/lib/
+CMAKE_C_FLAGS = "-I$(CMAKE_INCLUDES)"
+CMAKE_CXX_FLAGS = "-I$(CMAKE_INCLUDES)"
+CMAKE_SHARED_LINKER_FLAGS = "-L$(CMAKE_LIBS)"
+CMAKE_MODULE_LINKER_FLAGS = "-L$(CMAKE_LIBS)"
 
 CC=$(TCDIR)/bin/arm-none-linux-gnueabi-gcc
 CXX=$(TCDIR)/bin/arm-none-linux-gnueabi-g++
 
 build/$(CONFIG)/.config-pmcertificatemgr-${VERSION}: build/$(CONFIG)/.unpacked
-	cp -R build/$(CONFIG)/src/cmake-modules-webos/webOS build/$(CONFIG)/src/pmcertificatemgr/
 	touch $@
 
 build/$(CONFIG)/.built-pmcertificatemgr-${VERSION}: build/$(CONFIG)/.config-pmcertificatemgr-${VERSION}
-	mkdir build/$(CONFIG)/src/pmcertificatemgr/BUILD && \
+	mkdir -p build/$(CONFIG)/src/pmcertificatemgr/BUILD && \
 	cd build/$(CONFIG)/src/pmcertificatemgr/BUILD && \
-	CC=$(CC) CXX=$(CXX) cmake -DCMAKE_INCLUDE_PATH:PATH=$(CMAKE_INCLUDES) -DCMAKE_LIBRARY_PATH:PATH=$(CMAKE_LIBS) -DCMAKE_MODULE_PATH:PATH=$(CMAKE_WEBOS) -DWEBOS_INSTALL_ROOT:PATH=$(STAGING_DIR) .. && \
+	CC=$(CC) CXX=$(CXX) cmake -DCMAKE_INCLUDE_PATH:PATH=$(CMAKE_INCLUDES) -DCMAKE_LIBRARY_PATH:PATH=$(CMAKE_LIBS) -DCMAKE_MODULE_PATH:PATH=$(CMAKE_WEBOS) -DWEBOS_INSTALL_ROOT:PATH=$(STAGING_DIR) -DCMAKE_C_FLAGS=$(CMAKE_C_FLAGS) -DCMAKE_CXX_FLAGS=$(CMAKE_CXX_FLAGS) -DCMAKE_SHARED_LINKER_FLAGS=$(CMAKE_SHARED_LINKER_FLAGS) -DCMAKE_MODULE_LINKER_FLAGS=$(CMAKE_MODULE_LINKER_FLAGS) .. && \
 	make && \
 	make install
 	touch $@
