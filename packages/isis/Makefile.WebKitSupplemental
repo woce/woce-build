@@ -26,7 +26,7 @@ QMAKE_RANLIB := $(TCDIR)/bin/arm-none-linux-gnueabi-ranlib
 QMAKE_STRIP := $(TCDIR)/bin/arm-none-linux-gnueabi-strip
 QMAKE_LINK := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
 
-QMAKE := " $(QTPATH)/bin/qmake-palm QTDIR=$(QTPATH) QMAKE_CXX=$(QMAKE_CXX) QMAKE_CC=$(QMAKE_CC) QMAKE_AR='$(QMAKE_AR) -r' QMAKE_RANLIB=$(QMAKE_RANLIB) QMAKE_STRIP=$(QMAKE_STRIP) QMAKE_LINK=$(QMAKE_LINK) STAGING_INCDIR=$(STAGING_DIR)/usr/include"
+QMAKE := " $(QTPATH)/bin/qmake-palm QTDIR=$(QTPATH) QMAKE_CXX=$(QMAKE_CXX) QMAKE_CC=$(QMAKE_CC) QMAKE_AR='$(QMAKE_AR) -r' QMAKE_RANLIB=$(QMAKE_RANLIB) QMAKE_STRIP=$(QMAKE_STRIP) QMAKE_LINK=$(QMAKE_LINK) STAGING_DIR=$(STAGING_DIR)/usr"
 
 
 
@@ -34,6 +34,6 @@ build/$(CONFIG)/.config-WebKitSupplemental-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
 build/$(CONFIG)/.built-WebKitSupplemental-${VERSION}: build/$(CONFIG)/.config-WebKitSupplemental-${VERSION}
-	make -C build/$(CONFIG)/src/WebKitSupplemental/ INCLUDES="$(INCLUDE_DIRS)" DISTRO_TYPE=release TARGET_ARCH=arm INCLUDE_DIR=$(STAGING_DIR)/usr/include/ LIB_DIR=$(STAGING_DIR)/usr/lib/ QTDIR=$(QTPATH) QMAKE=$(QMAKE) INSTALL_DIR=$(STAGING_DIR) configure all install
+	make -C build/$(CONFIG)/src/WebKitSupplemental/ INCLUDES="$(INCLUDE_DIRS)" DISTRO_TYPE=release TARGET_ARCH=arm QTDIR=$(QTPATH) QMAKE=$(QMAKE) STAGING_DIR=$(STAGING_DIR)/usr INSTALL_DIR=$(STAGING_DIR) configure all install
 	touch $@
 

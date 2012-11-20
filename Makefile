@@ -52,10 +52,13 @@ npapi:
 pbnjson:
 	$(MAKE) -C packages/isis -f Makefile.pbnjson
 
+pmcertificatemgr:
+	$(MAKE) -C packages/isis -f Makefile.pmcertmgr
+
 browseradapter: npapi pbnjson adapterbase
 	$(MAKE) -C packages/isis -f Makefile.BrowserAdapter
 
-browserserver: browseradapter webkitsupplemental
+browserserver: browseradapter webkitsupplemental pmcertificatemgr
 	$(MAKE) -C packages/isis -f Makefile.BrowserServer
 
 webkit: webkit-depends

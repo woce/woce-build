@@ -91,9 +91,9 @@
 #endif
 
 /* File I/O */
-#ifndef QT_NO_DOM
+/*#ifndef QT_NO_DOM
 #  define QT_NO_DOM
-#endif
+#endif*/
 
 /* Fonts */
 #ifndef QT_NO_QWS_QPF
