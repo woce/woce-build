@@ -48,6 +48,7 @@ INCLUDES := \
 	-I$(INCLUDE_DIR)/glib-2.0/
 LIBS := \
 	-L$(STAGING_LIB_DIR) \
+	-Wl,-rpath $(STAGING_LIB_DIR) \
         -lpthread \
         -lglib-2.0 \
 	-llunaservice \
