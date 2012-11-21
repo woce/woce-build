@@ -16,13 +16,19 @@ unpack: build/$(CONFIG)/.unpacked
 #	mkdir -p build/$(CONFIG)/src
 #	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
 #	touch $@
-
+CXX := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
+CC := $(TCDIR)/bin/arm-none-linux-gnueabi-gcc
+AR := $(TCDIR)/bin/arm-none-linux-gnueabi-ar
+RANLIB := $(TCDIR)/bin/arm-none-linux-gnueabi-ranlib
+STRIP := $(TCDIR)/bin/arm-none-linux-gnueabi-strip
+LINK := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
 INCLUDE_DIRS := -I$(STAGING_DIR)/ISIS_OUT/include/ -I$(STAGING_DIR)/usr/include/ -I$(STAGING_DIR)/usr/include/glib-2.0/
 
 build/$(CONFIG)/.config-AdapterBase-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
 build/$(CONFIG)/.built-AdapterBase-${VERSION}: build/$(CONFIG)/.config-AdapterBase-${VERSION}
-	make -C build/$(CONFIG)/src/AdapterBase/ INCLUDES="$(INCLUDE_DIRS)" PACKAGE_NAME=AdapterBase LUNA_STAGING=$(STAGING_DIR)
+	make -C build/$(CONFIG)/src/AdapterBase/ CXX=$(CXX) CC=$(CC) AR=$(AR) RANLIB=$(RANLIB) STRIP=$(STRIP) LINK=$(LINK)  INCLUDES="$(INCLUDE_DIRS)" PACKAGE_NAME=AdapterBase LUNA_STAGING=$(STAGING_DIR)
+	cp build/$(CONFIG)/src/AdapterBase/AdapterBase.h $(STAGING_DIR)/AdapterBase/
 	touch $@
 

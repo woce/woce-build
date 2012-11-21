@@ -20,7 +20,7 @@ unpack: build/$(CONFIG)/.unpacked
 TARGET_ARCH=armv7
 STAGING_INCDIR=$(STAGING_DIR)/usr/include/
 INCLUDE_DIR=$(STAGING_INCDIR)
-STAGING_LIB_DIR=$(STAGING_DIR)/usr/lib/
+STAGING_LIBDIR=$(STAGING_DIR)/usr/lib/
 QT_INSTALL_PREFIX=$(shell readlink -f $(LEVEL)/packages/sysmgr/qt4/build/armv7)
 INSTALL_DIR=$(STAGING_DIR)
 CXX := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
@@ -47,8 +47,8 @@ INCLUDES := \
         -I$(INCLUDE_DIR)/QtNetwork \
 	-I$(INCLUDE_DIR)/glib-2.0/
 LIBS := \
-	-L$(STAGING_LIB_DIR) \
-	-Wl,-rpath $(STAGING_LIB_DIR) \
+	-L$(STAGING_LIBDIR) \
+	-Wl,-rpath $(STAGING_LIBDIR) \
         -lpthread \
         -lglib-2.0 \
 	-llunaservice \
@@ -70,6 +70,6 @@ build/$(CONFIG)/.config-BrowserServer-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
 build/$(CONFIG)/.built-BrowserServer-${VERSION}: build/$(CONFIG)/.config-BrowserServer-${VERSION}
-	make -C build/$(CONFIG)/src/BrowserServer/ CXX=$(CXX) CC=$(CC) AR=$(AR) RANLIB=$(RANLIB) STRIP=$(STRIP) LINK=$(LINK) TARGET_ARCH=$(TARGET_ARCH) STAGING_INCDIR=$(STAGING_INCDIR) INCLUDE_DIR=$(INCLUDE_DIR) STAGING_LIB_DIR=$(STAGING_LIB_DIR) QT_INSTALL_PREFIX=$(QT_INSTALL_PREFIX) INSTALL_DIR=$(INSTALL_DIR) INCLUDES="$(INCLUDES)" STAGING_BINDIR_NATIVE=$(STAGING_BINDIR_NATIVE) LIBS="$(LIBS)"
+	make -C build/$(CONFIG)/src/BrowserServer/ all stage CXX=$(CXX) CC=$(CC) AR=$(AR) RANLIB=$(RANLIB) STRIP=$(STRIP) LINK=$(LINK) TARGET_ARCH=$(TARGET_ARCH) STAGING_INCDIR=$(STAGING_INCDIR) INCLUDE_DIR=$(INCLUDE_DIR) STAGING_LIBDIR=$(STAGING_LIBDIR) QT_INSTALL_PREFIX=$(QT_INSTALL_PREFIX) INSTALL_DIR=$(INSTALL_DIR) INCLUDES="$(INCLUDES)" STAGING_BINDIR_NATIVE=$(STAGING_BINDIR_NATIVE) LIBS="$(LIBS)"
 	touch $@
 

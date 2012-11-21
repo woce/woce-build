@@ -22,11 +22,38 @@ STAGING_INC_DIR=$(STAGING_DIR)/usr/include/
 STAGING_LIB_DIR=$(STAGING_DIR)/usr/lib/
 QT_INSTALL_PREFIX=$(shell readlink -f $(LEVEL)/packages/sysmgr/qt4/build/armv7)
 INSTALL_DIR=$(STAGING_DIR)
+CXX := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
+CC := $(TCDIR)/bin/arm-none-linux-gnueabi-gcc
+AR := $(TCDIR)/bin/arm-none-linux-gnueabi-ar
+RANLIB := $(TCDIR)/bin/arm-none-linux-gnueabi-ranlib
+STRIP := $(TCDIR)/bin/arm-none-linux-gnueabi-strip
+LINK := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
+INCLUDES := -I-I$(STAGING_DIR)/ISIS_OUT/include/ -I$(STAGING_DIR)/ISIS_OUT/include/webkit/npapi -I$(shell readlink -f build/$(CONFIG)/src/BrowserAdapter/) -I$(STAGING_DIR)/AdapterBase -I$(STAGING_INC_DIR) -I$(STAGING_INC_DIR)/glib-2.0 -I$(STAGING_INC_DIR)/Yap -I$(STAGING_INC_DIR)/BrowserServer
+LIBS := -L$(STAGING_LIB_DIR) -lYap $(STAGING_DIR)/AdapterBase/AdapterBase.a
+
+INCLUDES += \
+    -I$(QT_INSTALL_PREFIX)/include/ \
+    -I$(QT_INSTALL_PREFIX)/include/Qt \
+    -I$(QT_INSTALL_PREFIX)/include/QtCore \
+    -I$(QT_INSTALL_PREFIX)/include/QtGui \
+    -I$(QT_INSTALL_PREFIX)/include/QtNetwork
+
+LIBS += \
+    -Wl,-rpath $(STAGING_LIB_DIR) \
+    -L$(QT_INSTALL_PREFIX)/lib \
+        -L$(STAGING_LIB_DIR) \
+    -lQtGui \
+    -lQtNetwork \
+    -lQtCore \
+    -lrt -lpthread \
+    -lpbnjson_cpp \
+    -lglib-2.0
+
 
 build/$(CONFIG)/.config-BrowserAdapter-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
 build/$(CONFIG)/.built-BrowserAdapter-${VERSION}: build/$(CONFIG)/.config-BrowserAdapter-${VERSION}
-	make -C build/$(CONFIG)/src/BrowserAdapter/ TARGET_ARCH=$(TARGET_ARCH) STAGING_INC_DIR=$(STAGING_INC_DIR) STAGING_LIB_DIR=$(STAGING_LIB_DIR) QT_INSTALL_PREFIX=$(QT_INSTALL_PREFIX) INSTALL_DIR=$(INSTALL_DIR)
+	make -C build/$(CONFIG)/src/BrowserAdapter/ all install CXX=$(CXX) CC=$(CC) AR=$(AR) RANLIB=$(RANLIB) STRIP=$(STRIP) LINK=$(LINK)  INCLUDES="$(INCLUDES)" LIBS="$(LIBS)" TARGET_ARCH=$(TARGET_ARCH) STAGING_INC_DIR=$(STAGING_INC_DIR) STAGING_LIB_DIR=$(STAGING_LIB_DIR) QT_INSTALL_PREFIX=$(QT_INSTALL_PREFIX) INSTALL_DIR=$(INSTALL_DIR)
 	touch $@
 

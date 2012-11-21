@@ -21,6 +21,8 @@ build/$(CONFIG)/.config-npapi-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
 build/$(CONFIG)/.built-npapi-${VERSION}: build/$(CONFIG)/.config-npapi-${VERSION}
-	HOME=$(STAGING_DIR) make -C build/$(CONFIG)/src/npapi-headers/
+	make -C build/$(CONFIG)/src/npapi-headers/ HOME=$(STAGING_DIR)
+	rm -rf $(STAGING_DIR)/usr/include/webkit/npapi
+	ln -s $(STAGING_DIR)/ISIS_OUT/include/webkit/npapi $(STAGING_DIR)/usr/include/webkit/npapi
 	touch $@
 
