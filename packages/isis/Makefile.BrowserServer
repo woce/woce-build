@@ -7,7 +7,7 @@ build::
 include $(LEVEL)/Makefile.common
 
 .PHONY: build unpack
-build:: build/$(CONFIG)/.built-BrowserAdapter-${VERSION}
+build:: build/$(CONFIG)/.built-BrowserServer-${VERSION}
 unpack: build/$(CONFIG)/.unpacked
 
 ### Unpack the software and build it
@@ -18,15 +18,57 @@ unpack: build/$(CONFIG)/.unpacked
 #	touch $@
 
 TARGET_ARCH=armv7
-STAGING_INC_DIR=$(STAGING_DIR)/usr/include/
+STAGING_INCDIR=$(STAGING_DIR)/usr/include/
+INCLUDE_DIR=$(STAGING_INCDIR)
 STAGING_LIB_DIR=$(STAGING_DIR)/usr/lib/
 QT_INSTALL_PREFIX=$(shell readlink -f $(LEVEL)/packages/sysmgr/qt4/build/armv7)
 INSTALL_DIR=$(STAGING_DIR)
+CXX := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
+CC := $(TCDIR)/bin/arm-none-linux-gnueabi-gcc
+AR := $(TCDIR)/bin/arm-none-linux-gnueabi-ar
+RANLIB := $(TCDIR)/bin/arm-none-linux-gnueabi-ranlib
+STRIP := $(TCDIR)/bin/arm-none-linux-gnueabi-strip
+LINK := $(TCDIR)/bin/arm-none-linux-gnueabi-g++
+STAGING_BINDIR_NATIVE=$(STAGING_DIR)/usr/bin/
+INCLUDES := \
+        -isystem $(STAGING_INCDIR)/PmCertificateMgr/IncsPublic \
+        -isystem $(STAGING_INCDIR)/webkit \
+        -I./Src \
+        -I./Yap \
+        -I$(STAGING_INCDIR) \
+        -I$(STAGING_INCDIR)/ime \
+        -I$(STAGING_INCDIR)/QtWebKit \
+        -I$(STAGING_INCDIR)/sysmgr-ipc \
+        -I$(STAGING_INCDIR)/WebKitSupplemental \
+        -I$(INCLUDE_DIR) \
+        -I$(INCLUDE_DIR)/Qt \
+        -I$(INCLUDE_DIR)/QtCore \
+        -I$(INCLUDE_DIR)/QtGui \
+        -I$(INCLUDE_DIR)/QtNetwork \
+	-I$(INCLUDE_DIR)/glib-2.0/
+LIBS := \
+	-L$(STAGING_LIB_DIR) \
+        -lpthread \
+        -lglib-2.0 \
+	-llunaservice \
+        -lpbnjson_cpp \
+	-lPmCertificateMgr \
+        -lrt \
+        -lcrypto \
+        -lQtCore \
+        -ldl \
+        -lssl \
+        -lQtGui \
+        -lQtWebKit \
+        -lQtNetwork \
+        -lWebKitMisc \
+        -lgthread-2.0
 
-build/$(CONFIG)/.config-BrowserAdapter-${VERSION}: build/$(CONFIG)/.unpacked
+
+build/$(CONFIG)/.config-BrowserServer-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
-build/$(CONFIG)/.built-BrowserAdapter-${VERSION}: build/$(CONFIG)/.config-BrowserAdapter-${VERSION}
-	make -C build/$(CONFIG)/src/BrowserAdapter/ TARGET_ARCH=$(TARGET_ARCH) STAGING_INC_DIR=$(STAGING_INC_DIR) STAGING_LIB_DIR=$(STAGING_LIB_DIR) QT_INSTALL_PREFIX=$(QT_INSTALL_PREFIX) INSTALL_DIR=$(INSTALL_DIR)
+build/$(CONFIG)/.built-BrowserServer-${VERSION}: build/$(CONFIG)/.config-BrowserServer-${VERSION}
+	make -C build/$(CONFIG)/src/BrowserServer/ CXX=$(CXX) CC=$(CC) AR=$(AR) RANLIB=$(RANLIB) STRIP=$(STRIP) LINK=$(LINK) TARGET_ARCH=$(TARGET_ARCH) STAGING_INCDIR=$(STAGING_INCDIR) INCLUDE_DIR=$(INCLUDE_DIR) STAGING_LIB_DIR=$(STAGING_LIB_DIR) QT_INSTALL_PREFIX=$(QT_INSTALL_PREFIX) INSTALL_DIR=$(INSTALL_DIR) INCLUDES="$(INCLUDES)" STAGING_BINDIR_NATIVE=$(STAGING_BINDIR_NATIVE) LIBS="$(LIBS)"
 	touch $@
 

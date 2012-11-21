@@ -34,6 +34,6 @@ build/$(CONFIG)/.config-WebKitSupplemental-${VERSION}: build/$(CONFIG)/.unpacked
 	touch $@
 
 build/$(CONFIG)/.built-WebKitSupplemental-${VERSION}: build/$(CONFIG)/.config-WebKitSupplemental-${VERSION}
-	make -C build/$(CONFIG)/src/WebKitSupplemental/ INCLUDES="$(INCLUDE_DIRS)" DISTRO_TYPE=release TARGET_ARCH=arm QTDIR=$(QTPATH) QMAKE=$(QMAKE) STAGING_DIR=$(STAGING_DIR)/usr INSTALL_DIR=$(STAGING_DIR) configure all install
+	make -C build/$(CONFIG)/src/WebKitSupplemental/ INCLUDES="$(INCLUDE_DIRS)" DISTRO_TYPE=release TARGET_ARCH=arm QTDIR=$(QTPATH) QMAKE=$(QMAKE) STAGING_DIR=$(STAGING_DIR)/usr INSTALL_DIR=$(STAGING_DIR) configure all stage install
 	touch $@
 
