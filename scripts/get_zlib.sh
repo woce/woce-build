@@ -16,6 +16,9 @@ wget http://downloads.help.palm.com/opensource/3.0.5/zlib-1.2.3-patches.tgz
 tar -xvf zlib-1.2.3.tar.bz2
 tar -xvf zlib-1.2.3-patches.tgz
 
+rm zlib-1.2.3.tar.bz2
+rm zlib-1.2.3-patches.tgz
+
 cd zlib-1.2.3
 
 patch -p1 < ../visibility.patch

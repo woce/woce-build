@@ -1,0 +1,41 @@
+VERSION  = 0.0.1
+
+LEVEL=../..
+
+build::
+
+include $(LEVEL)/Makefile.common
+
+.PHONY: build unpack
+build:: build/$(CONFIG)/.built-cmakemodules-${VERSION}
+unpack: build/$(CONFIG)/.unpacked
+
+### Unpack the software and build it
+#build/$(CONFIG)/.unpacked: $(ISIS_DL)
+#	-rm -rf build/$(CONFIG)
+#	mkdir -p build/$(CONFIG)/src
+#	$(call EXTRACT,ISIS,build/$(CONFIG)/src,--strip=1)
+#	touch $@
+
+CMAKE_INCLUDES = $(STAGING_DIR)/usr/include/
+CMAKE_LIBS = $(STAGING_DIR)/usr/lib/
+CMAKE_C_FLAGS = "-I$(CMAKE_INCLUDES)"
+CMAKE_CXX_FLAGS = "-I$(CMAKE_INCLUDES)"
+CMAKE_SHARED_LINKER_FLAGS = "-L$(CMAKE_LIBS)"
+CMAKE_MODULE_LINKER_FLAGS = "-L$(CMAKE_LIBS)"
+
+CC=$(TCDIR)/bin/arm-none-linux-gnueabi-gcc
+CXX=$(TCDIR)/bin/arm-none-linux-gnueabi-g++
+
+build/$(CONFIG)/.config-cmakemodules-${VERSION}: build/$(CONFIG)/.unpacked
+	touch $@
+
+build/$(CONFIG)/.built-cmakemodules-${VERSION}: build/$(CONFIG)/.config-cmakemodules-${VERSION}
+	mkdir -p build/$(CONFIG)/src/cmake-modules-webos/BUILD && \
+	cd build/$(CONFIG)/src/cmake-modules-webos/BUILD && \
+	CC=$(CC) CXX=$(CXX) cmake -DCMAKE_INCLUDE_PATH:PATH=$(CMAKE_INCLUDES) -DCMAKE_LIBRARY_PATH:PATH=$(CMAKE_LIBS) -DWEBOS_INSTALL_ROOT:PATH=$(STAGING_DIR) -DCMAKE_C_FLAGS=$(CMAKE_C_FLAGS) -DCMAKE_CXX_FLAGS=$(CMAKE_CXX_FLAGS) -DCMAKE_SHARED_LINKER_FLAGS=$(CMAKE_SHARED_LINKER_FLAGS) -DCMAKE_MODULE_LINKER_FLAGS=$(CMAKE_MODULE_LINKER_FLAGS) .. && \
+	make && \
+	sudo make install
+	touch $@
+
+

@@ -49,10 +49,13 @@ adapterbase:
 npapi:
 	$(MAKE) -C packages/isis -f Makefile.npapi
 
-pbnjson:
+cmakemodules:
+	$(MAKE) -C packages/isis -f Makefile.cmakemodules
+
+pbnjson: cmakemodules
 	$(MAKE) -C packages/isis -f Makefile.pbnjson
 
-pmcertificatemgr:
+pmcertificatemgr: cmakemodules
 	$(MAKE) -C packages/isis -f Makefile.pmcertmgr
 
 browseradapter: npapi pbnjson adapterbase browserserver
