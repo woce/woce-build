@@ -15,7 +15,7 @@ include $(LEVEL)/Makefile.common
 # For now, just list packages to be built here, in a working order.
 build:: linkdirs
 	$(MAKE) woce-toolchain woce-headers
-	$(MAKE) webkitsupplemental
+	$(MAKE) isis
 	$(MAKE) luna-sysmgr
 	@echo
 	@echo "Build Success!  New LunaSysMgr available at:"
@@ -32,7 +32,7 @@ qt4:
 luna-sysmgr: qt4
 	$(MAKE) -C packages/sysmgr/luna-sysmgr
 
-webkit-depends: downloads/.zlib downloads/.freetype qt4
+webkit-depends: downloads/.zlib downloads/.freetype qt4 npapi
 
 # This is a mess... Need to clean it up...
 downloads/.zlib:
@@ -55,10 +55,10 @@ pbnjson:
 pmcertificatemgr:
 	$(MAKE) -C packages/isis -f Makefile.pmcertmgr
 
-browseradapter: npapi pbnjson adapterbase
+browseradapter: npapi pbnjson adapterbase browserserver
 	$(MAKE) -C packages/isis -f Makefile.BrowserAdapter
 
-browserserver: browseradapter webkitsupplemental pmcertificatemgr
+browserserver: webkitsupplemental pmcertificatemgr
 	$(MAKE) -C packages/isis -f Makefile.BrowserServer
 
 webkit: webkit-depends
