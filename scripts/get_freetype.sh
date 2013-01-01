@@ -25,13 +25,17 @@ patch -p1 < ../fix-configure.patch
 patch -p1 < ../libtool-tag.patch
 patch -p1 < ../files/no-hardcode.patch
 
-cp -R include/* $CURRENTDIR/staging/armv7/usr/include/
-cp builds/unix/freetype2.pc $CURRENTDIR/staging/armv7/usr/lib/pkgconfig/
 PREFIX=${CURRENTDIR}/staging/armv7/usr
-SEDPATHARG=${PREFIX//\//\\\/}
-sed -i -e "s/prefix\=\/usr\/local/prefix=${SEDPATHARG}/g" $CURRENTDIR/staging/armv7/usr/lib/pkgconfig/freetype2.pc
-
-touch .freetype
+cp -R include/* $CURRENTDIR/staging/armv7/usr/include/
+cd builds/unix/
+./configure --libdir=$PREFIX/lib/ --includedir=$PREFIX/include/ --prefix=$PREFIX/local/
+mkdir -p $CURRENTDIR/staging/armv7/usr/lib/pkgconfig/
+cp freetype2.pc $CURRENTDIR/staging/armv7/usr/lib/pkgconfig/
+#SEDPATHARG=${PREFIX//\//\\\/}
+#sed -i -e "s/prefix\=\/usr\/local/prefix=${SEDPATHARG}/g" $CURRENTDIR/staging/armv7/usr/lib/pkgconfig/freetype2.pc
 
 popd
+
+touch downloads/.freetype
+
 
