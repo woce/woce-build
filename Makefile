@@ -43,6 +43,17 @@ downloads/.freetype:
 	scripts/get_freetype.sh $(LEVEL)
 	touch $@
 
+$(call DL,ISIS)
+
+### Unpack the software and build it
+packages/isis/build/$(CONFIG)/.unpacked: $(ISIS_DL)
+	-rm -rf packages/isis/build/$(CONFIG)
+	mkdir -p packages/isis/build/$(CONFIG)/src
+	$(call EXTRACT,ISIS,packages/isis/build/$(CONFIG)/src,--strip=1)
+	touch $@
+
+isis-download: packages/isis/build/$(CONFIG)/.unpacked
+
 adapterbase:
 	$(MAKE) -C packages/isis -f Makefile.AdapterBase
 
@@ -76,7 +87,7 @@ enyo1:
 webview: enyo1
 	echo "Need to do something about webview"
 
-isis: browseradapter browserserver webview
+isis: isis-download browseradapter browserserver webview
 	echo "We'll need to run a palm-package"
 
 # Download and extract the toolchain
